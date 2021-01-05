@@ -18,6 +18,8 @@
         <module>s-pay</module>
         <module>s-pojo</module>
         <module>s-config</module>
+        <module>s-talk</module>
+        <module>s-like</module>
     </modules>
 
     <parent>
