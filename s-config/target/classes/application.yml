@@ -1,0 +1,19 @@
+server:
+  port: 8005
+spring:
+  application:
+    name: a-config
+
+  cloud:
+    config:
+      server:
+        #        native:
+        #          search-locations: classpath:properites/
+        git:
+          uri:
+          search-paths:
+          default-label:
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8000/eureka
