@@ -23,4 +23,6 @@ public class User {
     private String word;
     private String constellation;
     private String message;
+
+    private Integer status;
 }

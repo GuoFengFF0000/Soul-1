@@ -6,6 +6,8 @@ import com.qf.pojo.resp.BaseResp;
 import com.qf.pojo.vo.User;
 import com.qf.service.UserService;
 import com.qf.utils.JWTUtils;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    RabbitTemplate rabbitTemplate;
 
     @Override
     public BaseResp login(UserRep userRep) {
@@ -73,6 +78,62 @@ public class UserServiceImpl implements UserService {
         }
         baseResp.setCode(201);
         baseResp.setMessage("查询一个失败");
+        return baseResp;
+    }
+
+    @Override
+    public BaseResp registry(UserRep userReq) {
+        //1.将用户信息存储到数据库中，将用户的id以及email地址获取，发送给rabbitmq
+        BaseResp baseResp = new BaseResp();
+        if(userReq.getEmail()==null){
+            baseResp.setMessage("邮箱不能为空");
+            baseResp.setCode(101);
+            return baseResp;
+        }
+        User byUserName = userRepository.findByUserName(userReq.getUserName());
+        if(byUserName!=null){
+            baseResp.setMessage("用户名已存在");
+            baseResp.setCode(102);
+            return baseResp;
+        }
+        User byEmail = userRepository.findByEmail(userReq.getEmail());
+        if(byEmail!=null){
+            baseResp.setMessage("邮箱已经被注册");
+            baseResp.setCode(103);
+            return baseResp;
+        }
+        //复制对象
+        User user = new User();
+        BeanUtils.copyProperties(userReq,user);
+        user.setStatus(0);
+        User user1 = userRepository.saveAndFlush(user);
+        Map map = new HashMap<>();
+        map.put("id",user1.getId());
+        map.put("email",user1.getEmail());
+        rabbitTemplate.convertAndSend("","send-mail",map);
+        baseResp.setCode(200);
+        baseResp.setMessage("注册成功,请到邮箱激活账号");
+        return baseResp;
+    }
+
+    @Override
+    public BaseResp editStatus(Integer id) {
+        BaseResp baseResp = new BaseResp();
+        Optional<User> byId = userRepository.findById(id);
+        if(!byId.isPresent()){
+            baseResp.setCode(103);
+            baseResp.setMessage("未找到该用户");
+            return baseResp;
+        }
+        User user = byId.get();
+        if(user.getStatus()!=null&&user.getStatus()==1){
+            baseResp.setMessage("该账号已经激活,无法重复");
+            return baseResp;
+        }
+        user.setStatus(1);
+        userRepository.saveAndFlush(user);
+        baseResp.setCode(200);
+        baseResp.setMessage("激活成功");
         return baseResp;
     }
 }

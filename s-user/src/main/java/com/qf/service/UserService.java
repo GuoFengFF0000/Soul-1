@@ -9,4 +9,8 @@ public interface UserService {
     BaseResp findAll();
 
     BaseResp findById(Integer id);
+
+    BaseResp registry(UserRep userReq);
+
+    BaseResp editStatus(Integer id);
 }

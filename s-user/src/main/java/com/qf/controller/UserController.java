@@ -4,10 +4,7 @@ import com.qf.pojo.rep.UserRep;
 import com.qf.pojo.resp.BaseResp;
 import com.qf.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -21,6 +18,16 @@ public class UserController {
     @RequestMapping("/login")
     public BaseResp login(@RequestBody UserRep userRep){
         return userService.login(userRep);
+    }
+    //注册
+    @RequestMapping("/registry")
+    public BaseResp registry(@RequestBody UserRep UserReq){
+        return userService.registry(UserReq);
+    }
+    //账号激活状态
+    @RequestMapping("/editStatus/{id}")
+    public BaseResp editStatus(@PathVariable("id")Integer id){
+        return userService.editStatus(id);
     }
 
 
