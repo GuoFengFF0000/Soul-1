@@ -4,6 +4,8 @@ import com.qf.pojo.vo.User;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * Created by 54110 on 2020/12/24.
  */
@@ -12,4 +14,7 @@ public interface UserRepository extends JpaRepository<User,Integer>{
     User findByUserName(String userName);
 
     User findByEmail(String email);
+
+
+
 }

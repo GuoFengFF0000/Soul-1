@@ -2,6 +2,10 @@ package com.qf.service;
 
 import com.qf.pojo.rep.UserRep;
 import com.qf.pojo.resp.BaseResp;
+import com.qf.pojo.vo.User;
+
+
+
 
 public interface UserService {
     BaseResp login(UserRep userRep);
@@ -13,4 +17,8 @@ public interface UserService {
     BaseResp registry(UserRep userReq);
 
     BaseResp editStatus(Integer id);
+
+    BaseResp selectAll();
+
+    BaseResp selectById( Integer id);
 }

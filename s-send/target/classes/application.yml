@@ -1,0 +1,45 @@
+spring:
+  #邮箱配置
+  mail:
+    host: smtp.qq.com
+    username: 1758020778@qq.com
+    #QQ邮箱的授权码
+    password: vqkfsfnedzfpegeb
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+#设置一个邮件发送人
+lance:
+  mail:
+    sender: 1758020778@qq.com
+  application:
+    name: s-send
+  cloud:
+    config:
+      #http://localhost:7500/qf-shop/dev
+      #uri: http://localhost:7500
+      discovery:
+        #我们配置再eureka上 得唯一标识
+        service-id: s-config
+        enabled: true
+      name: soul
+      profile: dev
+      label: main
+
+
+server:
+  port: 8077
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8000/eureka
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh

@@ -1,5 +1,6 @@
 package com.qf.service.impl;
 
+import com.qf.dao.UserMapper;
 import com.qf.dao.UserRepository;
 import com.qf.pojo.rep.UserRep;
 import com.qf.pojo.resp.BaseResp;
@@ -9,6 +10,8 @@ import com.qf.utils.JWTUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -22,8 +25,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
 
+
     @Autowired
     RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    UserMapper userMapper;
 
     @Override
     public BaseResp login(UserRep userRep) {
@@ -33,12 +40,12 @@ public class UserServiceImpl implements UserService {
         User byUserName = userRepository.findByUserName(userName);
         if(byUserName==null){
             baseResp.setCode(404);
-            baseResp.setMessage("找不到该用户");
+            baseResp.setMessage("未找到该用户");
             return baseResp;
         }
         if(!byUserName.getPassword().equals(userRep.getPassword())){
             baseResp.setCode(500);
-            baseResp.setMessage("密码不对");
+            baseResp.setMessage("密码错误,重新输入");
             return baseResp;
         }
         //使用jwt加密
@@ -49,7 +56,7 @@ public class UserServiceImpl implements UserService {
         map.put("id",byUserName.getId());
         String token = jwtUtils.token(map);
         baseResp.setData(token);
-        baseResp.setMessage("登陆成功");
+        baseResp.setMessage("登录成功");
         baseResp.setCode(200);
         return baseResp;
     }
@@ -58,11 +65,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BaseResp findAll() {
+
         BaseResp baseResp = new BaseResp();
-        List<User> all=userRepository.findAll();
+        List<User> all = userRepository.findAll();
         baseResp.setCode(200);
         baseResp.setMessage("查询所有成功");
         baseResp.setData(all);
+
         return baseResp;
     }
 
@@ -136,4 +145,32 @@ public class UserServiceImpl implements UserService {
         baseResp.setMessage("激活成功");
         return baseResp;
     }
+
+    @Override
+    public BaseResp selectAll() {
+        BaseResp baseResp = new BaseResp();
+        List<User> users = userMapper.selectAll();
+        baseResp.setCode(200);
+        baseResp.setMessage("随机查询所有成功");
+        baseResp.setData(users);
+
+        return baseResp;
+    }
+
+    @Override
+    public BaseResp selectById(Integer id) {
+        BaseResp baseResp = new BaseResp();
+        List<User> user = userMapper.selectById(id);
+        if(user!=null){
+            baseResp.setCode(200);
+            baseResp.setMessage("查询一个成功");
+            baseResp.setData(user);
+            return baseResp;
+        }
+        baseResp.setCode(201);
+        baseResp.setMessage("查询失败");
+        return baseResp;
+    }
+
+
 }

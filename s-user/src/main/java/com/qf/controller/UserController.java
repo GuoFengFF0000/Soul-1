@@ -10,17 +10,18 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin
 public class UserController {
 
     @Autowired
     UserService userService;
 
-    @RequestMapping("/login")
+    @RequestMapping(value = "/login",method = RequestMethod.POST)
     public BaseResp login(@RequestBody UserRep userRep){
         return userService.login(userRep);
     }
     //注册
-    @RequestMapping("/registry")
+    @RequestMapping(value = "/registry",method = RequestMethod.POST)
     public BaseResp registry(@RequestBody UserRep UserReq){
         return userService.registry(UserReq);
     }
@@ -31,9 +32,9 @@ public class UserController {
     }
 
 
-    //查所有
+    //后台查所有
     @RequestMapping("/findAll")
-    public BaseResp findAll(){
+    public BaseResp findAl(){
         return userService.findAll();
     }
 
@@ -42,4 +43,17 @@ public class UserController {
     public BaseResp findById(@RequestBody Map map){
         return userService.findById(Integer.valueOf(map.get("id").toString()));
     }
+
+    //随机查所有
+    @RequestMapping("/selectAll")
+    public  BaseResp selectAll(){
+        return userService.selectAll();
+    }
+
+    //查彼此喜欢
+    @RequestMapping("/selectById")
+    public BaseResp selectById(@RequestBody Map map){
+        return userService.selectById(Integer.valueOf(map.get("id").toString()));
+    }
+
 }
