@@ -1,5 +1,4 @@
 package com.qf.service.impl;
-
 import com.qf.dao.UserMapper;
 import com.qf.dao.UserRepository;
 import com.qf.pojo.rep.UserRep;
@@ -10,8 +9,6 @@ import com.qf.utils.JWTUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -35,30 +32,30 @@ public class UserServiceImpl implements UserService {
     @Override
     public BaseResp login(UserRep userRep) {
         BaseResp baseResp = new BaseResp();
-        //获取用户名
-        String userName = userRep.getUserName();
-        User byUserName = userRepository.findByUserName(userName);
-        if(byUserName==null){
+        //获取邮箱
+        String email = userRep.getEmail();
+        User byEmail = userRepository.findByEmail(email);
+        if(byEmail==null){
             baseResp.setCode(404);
             baseResp.setMessage("未找到该用户");
             return baseResp;
         }
-        if(!byUserName.getPassword().equals(userRep.getPassword())){
+        if(!byEmail.getPassword().equals(userRep.getPassword())){
             baseResp.setCode(500);
-            baseResp.setMessage("密码错误,重新输入");
+            baseResp.setMessage("密码错误");
             return baseResp;
         }
-        //使用jwt加密
+        //使用JWT
         JWTUtils jwtUtils = new JWTUtils();
-        //将个人信息放置在jwt中
-        Map map = new HashMap<>();
-        map.put("userName",byUserName.getUserName());
-        map.put("id",byUserName.getId());
+        Map map =new HashMap();
+        map.put("email",byEmail.getEmail());
+        map.put("id",byEmail.getId());
         String token = jwtUtils.token(map);
-        baseResp.setData(token);
-        baseResp.setMessage("登录成功");
         baseResp.setCode(200);
+        baseResp.setMessage("登录成功");
+        baseResp.setData(token);
         return baseResp;
+
     }
 
 
