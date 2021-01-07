@@ -5,7 +5,7 @@ spring:
     name: s-user
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/soul?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/soul?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     password: root
     username: root
   jpa:
@@ -22,3 +22,23 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8000/eureka
+  instance:
+    prefer-ip-address: true
+    hostName: ${spring.cloud.client.ip-address}
+    instance-id: http://${spring.cloud.client.ip-address}:${server.port}
+
+feign:
+  hystrix:
+    enabled: true
+ribbon:
+  ReadTimeout: 3000
+  ConnetTimeout: 3000
+hystrix:
+  command:
+    default:  #default全局有效，service id指定应用有效
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000

@@ -19,6 +19,8 @@
         <module>s-pojo</module>
         <module>s-config</module>
         <module>s-send</module>
+        <module>s-talk</module>
+        <module>s-like</module>
     </modules>
 
     <parent>
