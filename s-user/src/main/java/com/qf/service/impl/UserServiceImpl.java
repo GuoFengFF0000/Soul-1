@@ -31,30 +31,40 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BaseResp login(UserRep userRep) {
+
         BaseResp baseResp = new BaseResp();
-        //获取邮箱
-        String email = userRep.getEmail();
-        User byEmail = userRepository.findByEmail(email);
-        if(byEmail==null){
-            baseResp.setCode(404);
-            baseResp.setMessage("未找到该用户");
+        String email1 = userRep.getEmail();
+        User byEmail1 = userRepository.findByEmail(email1);
+        if(byEmail1.getStatus()==0){
+            baseResp.setCode(401);
+            baseResp.setMessage("请先到邮箱激活账号");
+            return baseResp;
+        }else {
+            //获取邮箱
+            String email = userRep.getEmail();
+            User byEmail = userRepository.findByEmail(email);
+            if (byEmail == null) {
+                baseResp.setCode(404);
+                baseResp.setMessage("未找到该用户");
+                return baseResp;
+            } else if (!byEmail.getPassword().equals(userRep.getPassword())) {
+                baseResp.setCode(500);
+                baseResp.setMessage("密码错误");
+                return baseResp;
+            }
+            //使用JWT
+            JWTUtils jwtUtils = new JWTUtils();
+            Map map = new HashMap();
+            map.put("email", byEmail.getEmail());
+            map.put("id", byEmail.getId());
+            String token = jwtUtils.token(map);
+            baseResp.setCode(200);
+            baseResp.setMessage("登录成功");
+            baseResp.setData(token);
             return baseResp;
         }
-        if(!byEmail.getPassword().equals(userRep.getPassword())){
-            baseResp.setCode(500);
-            baseResp.setMessage("密码错误");
-            return baseResp;
-        }
-        //使用JWT
-        JWTUtils jwtUtils = new JWTUtils();
-        Map map =new HashMap();
-        map.put("email",byEmail.getEmail());
-        map.put("id",byEmail.getId());
-        String token = jwtUtils.token(map);
-        baseResp.setCode(200);
-        baseResp.setMessage("登录成功");
-        baseResp.setData(token);
-        return baseResp;
+
+
 
     }
 

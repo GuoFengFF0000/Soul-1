@@ -1,5 +1,5 @@
 server:
-  port: 8002
+  port: 9000
 spring:
   application:
     name: s-zuul
@@ -7,6 +7,6 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8000/eureka
-#当使用zuul进行请求
+#当使用zuul进行请求(携带cookie)
 zuul:
   sensitive-headers:
