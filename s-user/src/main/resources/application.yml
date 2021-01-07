@@ -1,10 +1,6 @@
 server:
   port: 8007
 spring:
-  jpa:
-    database: MYSQL
-    show-sql: true
-    generate-ddl: true
   application:
     name: s-user
   datasource:
@@ -31,8 +27,6 @@ eureka:
     hostName: ${spring.cloud.client.ip-address}
     instance-id: http://${spring.cloud.client.ip-address}:${server.port}
 
-mybatis:
-  mapper-locations: classpath:mapper/*Mapper.xml
 feign:
   hystrix:
     enabled: true

@@ -12,7 +12,7 @@ import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
  * @EnableZuulProxy 开启网关
  *
  */
-@SpringBootApplication
+@SpringBootApplication(exclude = org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration.class)
 @EnableDiscoveryClient
 @EnableZuulProxy
 public class ZuulApplication {
