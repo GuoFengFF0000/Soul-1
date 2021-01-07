@@ -3,10 +3,11 @@ server:
 spring:
   application:
     name: s-like
-  driver-class-name: com.mysql.jdbc.Driver
-  url: jdbc:mysql://localhost:3306/soul?useUnicode=true&characterEncoding=UTF-8&useSSL=false
-  password: root
-  username: root
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/soul?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    password: root
+    username: root
 eureka:
   client:
     service-url:
