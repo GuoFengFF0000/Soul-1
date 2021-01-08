@@ -13,7 +13,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/like")
-@CrossOrigin
+//@CrossOrigin
 public class LoveController {
 
     @Autowired

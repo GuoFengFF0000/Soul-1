@@ -80,33 +80,34 @@ public class LoveServiceImpl implements LoveService {
         }
 
         //查所有
-        BaseResp all = userClient.findAll();
-        List<User> list = (List<User>) all.getData();
-        for (User   o : list) {
-            User us =  o;
+        List<User> list = userClient.selectAll();
+        for (User o : list) {
             for (User user : userList) {
-                if (us.getId() == user.getId()){
+                if (o.getId() == user.getId()){
                     list.remove(o);
                 }
             }
 
             for (User user : noLikeList) {
-                if (us.getId() == user.getId()){
+                if (o.getId() == user.getId()){
                     list.remove(o);
                 }
             }
 
             for (User user : hobbyList) {
-                if (us.getId() == user.getId()){
+                if (o.getId() == user.getId()){
                     list.remove(o);
                 }
             }
-            if (us.getId() == id){
-                list.remove(o);
-            }
-
-            userList.add(us);
+                userList.add(o);
         }
+        User user = null;
+        for (User user1 : userList) {
+            if (user1.getId() == id){
+                user = user1;
+            }
+        }
+        userList.remove(user);
         BaseResp baseResp = new BaseResp();
         baseResp.setCode(200);
         baseResp.setData(userList);

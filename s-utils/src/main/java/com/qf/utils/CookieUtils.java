@@ -1,9 +1,7 @@
 package com.qf.utils;
 import javax.servlet.http.Cookie;
 
-/**
- * Created by 54110 on 2020/12/23.
- */
+
 public class CookieUtils {
 
 
