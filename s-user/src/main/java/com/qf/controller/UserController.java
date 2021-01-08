@@ -2,10 +2,12 @@ package com.qf.controller;
 
 import com.qf.pojo.rep.UserRep;
 import com.qf.pojo.resp.BaseResp;
+import com.qf.pojo.vo.User;
 import com.qf.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -46,7 +48,7 @@ public class UserController {
 
     //随机查所有
     @RequestMapping("/selectAll")
-    public  BaseResp selectAll(){
+    public List<User> selectAll(){
         return userService.selectAll();
     }
 
