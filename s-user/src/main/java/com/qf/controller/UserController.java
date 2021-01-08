@@ -58,4 +58,10 @@ public class UserController {
         return userService.selectById(Integer.valueOf(map.get("id").toString()));
     }
 
+    //查询一个  随机id
+    @RequestMapping("/selectIdRandom")
+    public User selectIdRandom(){
+        return userService.selectIdRandom();
+    }
+
 }
