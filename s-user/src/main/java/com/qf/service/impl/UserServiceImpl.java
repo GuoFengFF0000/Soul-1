@@ -154,14 +154,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BaseResp selectAll() {
+    public List<User> selectAll() {
         BaseResp baseResp = new BaseResp();
         List<User> users = userMapper.selectAll();
-        baseResp.setCode(200);
-        baseResp.setMessage("随机查询所有成功");
-        baseResp.setData(users);
 
-        return baseResp;
+        return users;
     }
 
     @Override
