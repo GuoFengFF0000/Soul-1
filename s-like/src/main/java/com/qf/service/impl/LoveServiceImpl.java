@@ -81,9 +81,9 @@ public class LoveServiceImpl implements LoveService {
 
         //查所有
         BaseResp all = userClient.findAll();
-        List list = (List) all.getData();
-        for (Object o : list) {
-            User us = (User) o;
+        List<User> list = (List<User>) all.getData();
+        for (User   o : list) {
+            User us =  o;
             for (User user : userList) {
                 if (us.getId() == user.getId()){
                     list.remove(o);
