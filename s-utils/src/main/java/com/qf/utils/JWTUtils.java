@@ -24,8 +24,8 @@ public class JWTUtils {
         Algorithm algorithmHS = Algorithm.HMAC256("qianfengjavaniubi");
         //计算过期时间
         long l = System.currentTimeMillis();
-
-        l+=60*60*1000;
+        //一个小时
+        l+=600*60*1000;
 
         Date date = new Date(l);
         //自定义头部
