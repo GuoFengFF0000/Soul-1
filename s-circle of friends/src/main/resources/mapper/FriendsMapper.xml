@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.dao.CircleFriendMapper">
+    <resultMap id="BaseResult" type="com.qf.pojo.CircleFriends">
+        <id column="cf_id" property="cfId"></id>
+        <result column="uid" property="uid"></result>
+        <result column="comment" property="comment"></result>
+        <result column="zannums" property="zanNums"></result>
+        <result column="commentnums" property="commentNums"></result>
+        <result column="commentdate" property="commentDate"></result>
+    </resultMap>
+
+
+   <insert id="insertComment" parameterType="com.qf.pojo.CircleFriends">
+        insert into circlefriend (uid,comment,commentdate) values (#{uid},#{comment},#{commentDate})
+   </insert>
+
+
+    <select id="circleFriendFindAllByNew" resultMap="BaseResult">
+        select * from circlefriend order by commentdate desc
+    </select>
+
+    <select id="circleFriendFindAllByNewByZanNums" resultMap="BaseResult">
+        select * from circlefriend order by zannums desc
+    </select>
+
+    <update id="addZanNums">
+        UPDATE circlefriend SET zannums=zannums + 1 WHERE cf_id=#{cfId}
+    </update>
+
+    <insert id="adminFriendAdd" parameterType="com.qf.pojo.CircleFriends">
+        insert into circlefriend (uid,comment,zannums,commentnums,commentdate) values (#{uid},#{comment},#{zanNums},#{commentNums},#{commentDate})
+   </insert>
+
+    <delete id="adminFriendDel" parameterType="com.qf.pojo.CircleFriends">
+        DELETE FROM circlefriend WHERE cf_id=#{cfId}
+    </delete>
+
+    <update id="adminFriendUpdate">
+         UPDATE circlefriend SET comment=#{comment},zannums=#{zanNums},commentnums=#{commentNums},commentdate=#{commentDate} WHERE cf_id=#{cfId}
+    </update>
+
+    <select id="adminFriendFindAll" resultMap="BaseResult">
+        select * from circlefriend
+    </select>
+
+    <select id="adminFriendFindByCfId" resultMap="BaseResult">
+         SELECT * FROM circlefriend WHERE cf_id = #{cfId}
+    </select>
+
+</mapper>

@@ -1,0 +1,18 @@
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective settings
+[WARNING] Unrecognised tag: 'profile' (position: START_TAG seen ...<!-- java\u7f16\u8bd1\u63d2\u4ef6\uff0c\u914djdk\u7684\u7f16\u8bd1\u7248\u672c-->\n        <profile>... @111:18)  @ E:\maven\apache-maven-3.5.4\bin\..\conf\settings.xml, line 111, column 18
+[WARNING] 
+[INFO] Scanning for projects...
+[ERROR] [ERROR] Some problems were encountered while processing the POMs:
+[ERROR] 'artifactId' with value 's-circle of friends' does not match a valid id pattern. @ com.qf:s-circle of friends:[unknown-version], E:\tools\idealspace\five-stage-project\s-circle of friends\pom.xml, line 12, column 17
+ @ 
+[ERROR] The build could not read 1 project -> [Help 1]
+[ERROR]   
+[ERROR]   The project com.qf:s-circle of friends:1.0-SNAPSHOT (E:\tools\idealspace\five-stage-project\s-circle of friends\pom.xml) has 1 error
+[ERROR]     'artifactId' with value 's-circle of friends' does not match a valid id pattern. @ com.qf:s-circle of friends:[unknown-version], E:\tools\idealspace\five-stage-project\s-circle of friends\pom.xml, line 12, column 17
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/ProjectBuildingException
