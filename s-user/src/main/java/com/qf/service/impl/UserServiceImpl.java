@@ -176,5 +176,11 @@ public class UserServiceImpl implements UserService {
         return baseResp;
     }
 
+    @Override
+    public User selectIdRandom() {
+        User user = userMapper.selectIdRandom();
+        return user;
+    }
+
 
 }

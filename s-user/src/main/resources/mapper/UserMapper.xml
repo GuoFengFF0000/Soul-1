@@ -27,4 +27,10 @@
     <select id="selectById" resultMap="BaserResult">
         SELECT * FROM USER,love WHERE user.`id`=love.`userid` AND love.`likeid`=#{id}
     </select>
+
+    <select id="selectIdRandom" resultMap="BaserResult">
+        SELECT * FROM USER ORDER BY RAND() limit 1
+    </select>
+
+
 </mapper>
