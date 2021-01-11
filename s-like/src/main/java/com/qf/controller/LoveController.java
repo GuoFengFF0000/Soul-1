@@ -12,7 +12,7 @@ import java.util.Map;
  * baiYu
  */
 @RestController
-@RequestMapping("/like")
+@RequestMapping("/love")
 //@CrossOrigin
 public class LoveController {
 

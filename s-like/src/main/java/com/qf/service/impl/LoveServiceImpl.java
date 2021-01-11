@@ -44,7 +44,7 @@ public class LoveServiceImpl implements LoveService {
         //喜欢自己的
         List<Love> byLikeIdAndSta = likeRepository.findByLikeIdAndSta(id, null);
 
-        if (byLikeIdAndSta.size() != 0){
+        if (byLikeIdAndSta.size() != 0) {
             baseResp.setCode(200);
             baseResp.setData(byLikeIdAndSta.get(0));
             baseResp.setMessage("查询成功");
@@ -57,46 +57,36 @@ public class LoveServiceImpl implements LoveService {
 
 
         for (Love love : byLikeId) {
-            if ("no".equals(love.getSta())){
+            if ("no".equals(love.getSta())) {
                 Map map = new HashMap();
-                map.put("id",love.getUserId());
+                map.put("id", love.getUserId());
                 BaseResp data = userClient.findById(map);
-                //Object data = byId.getData();
-                User user = JSONObject.parseObject(JSONObject.toJSON(data).toString(), User.class);
+                Object data1 = data.getData();
+                User user = JSONObject.parseObject(JSONObject.toJSON(data1).toString(), User.class);
                 noShow.add(user);
             }
         }
 
         for (Love love : yes) {
             Map map = new HashMap();
-            map.put("id",love.getUserId());
+            map.put("id", love.getUserId());
             BaseResp data = userClient.findById(map);
-            //User user = (User) byId.getData();
-            User user = JSONObject.parseObject(JSONObject.toJSON(data).toString(), User.class);
+            Object data1 = data.getData();
+            User user = JSONObject.parseObject(JSONObject.toJSON(data1).toString(), User.class);
             noShow.add(user);
         }
 
         for (Love love : byUserId) {
-            if ("yes".equals(love.getSta())){
-                Map map = new HashMap();
-                map.put("id",love.getUserId());
-                BaseResp data = userClient.findById(map);
-                //User user = (User) byId.getData();
-                User user = JSONObject.parseObject(JSONObject.toJSON(data).toString(), User.class);
-                noShow.add(user);
-            }
-            if ("no".equals(love.getSta())){
-                Map map = new HashMap();
-                map.put("id",love.getUserId());
-                BaseResp data = userClient.findById(map);
-                //User user = (User) byId.getData();
-                User user = JSONObject.parseObject(JSONObject.toJSON(data).toString(), User.class);
-                noShow.add(user);
-            }
-        }
-        if (true){
             Map map = new HashMap();
-            map.put("id",id);
+            map.put("id", love.getLikeId());
+            BaseResp data = userClient.findById(map);
+            Object data1 = data.getData();
+            User user = JSONObject.parseObject(JSONObject.toJSON(data1).toString(), User.class);
+            noShow.add(user);
+        }
+        if (true) {
+            Map map = new HashMap();
+            map.put("id", id);
             BaseResp byId = userClient.findById(map);
             Object data = byId.getData();
             User user = JSONObject.parseObject(JSONObject.toJSON(data).toString(), User.class);
@@ -104,12 +94,7 @@ public class LoveServiceImpl implements LoveService {
         }
 
         User user1 = userClient.selectIdRandom();
-        for (User user : noShow) {
-            boolean b = user1.getId() == user.getId();
-            if (b){
-                user1 = userClient.selectIdRandom();
-            }
-        }
+        user1 = getUser(user1, noShow);
         baseResp.setCode(200);
         baseResp.setData(user1);
         baseResp.setMessage("查询成功");
@@ -127,7 +112,7 @@ public class LoveServiceImpl implements LoveService {
         Map verify = jwtUtils.Verify(token);
         Integer id = (Integer) verify.get("id");
         Love like = likeRepository.findByLikeIdAndUserId(id, likeId);
-        if (like == null){
+        if (like == null) {
             Love like1 = new Love();
             like1.setLikeId(likeId);
             like1.setUserId(id);
@@ -138,8 +123,8 @@ public class LoveServiceImpl implements LoveService {
         } else {
             like.setSta("yes");
             likeRepository.saveAndFlush(like);
-            baseResp.setCode(200);
-            baseResp.setMessage("互相喜欢");
+            baseResp.setCode(201);
+            baseResp.setMessage("互相喜欢成功");
             baseResp.setData(like);
             return baseResp;
         }
@@ -156,7 +141,7 @@ public class LoveServiceImpl implements LoveService {
         Map verify = jwtUtils.Verify(token);
         Integer id = (Integer) verify.get("id");
         Love like = likeRepository.findByLikeIdAndUserId(id, likeId);
-        if (like == null){
+        if (like == null) {
             Love love = new Love();
             love.setUserId(id);
             love.setLikeId(likeId);
@@ -175,4 +160,16 @@ public class LoveServiceImpl implements LoveService {
         }
 
     }
+
+    public User getUser(User user1, List<User> noShow) {
+        for (User user : noShow) {
+            boolean b = user1.getId() == user.getId();
+            if (b) {
+                user1 = userClient.selectIdRandom();
+                getUser(user1, noShow);
+            }
+        }
+        return user1;
+    }
+
 }
