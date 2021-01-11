@@ -1,5 +1,6 @@
 package com.qf.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.qf.client.UserClient;
 import com.qf.dao.LoveRepository;
 import com.qf.pojo.resp.BaseResp;
@@ -31,90 +32,88 @@ public class LoveServiceImpl implements LoveService {
 
     @Override
     public BaseResp findRandom(HttpServletRequest req) {
+        BaseResp baseResp = new BaseResp();
         Cookie[] cookies = req.getCookies();
         String token = cookieUtils.getToken(cookies);
         JWTUtils jwtUtils = new JWTUtils();
         Map verify = jwtUtils.Verify(token);
         Integer id = (Integer) verify.get("id");
 
-        List<User> userList = new ArrayList<>();
-
-        List<User> hobbyList = new ArrayList<>();
-
-        List<User> noLikeList = new ArrayList<>();
+        List<User> noShow = new ArrayList<>();
 
         //喜欢自己的
+        List<Love> byLikeIdAndSta = likeRepository.findByLikeIdAndSta(id, null);
+
+        if (byLikeIdAndSta.size() != 0){
+            baseResp.setCode(200);
+            baseResp.setData(byLikeIdAndSta.get(0));
+            baseResp.setMessage("查询成功");
+            return baseResp;
+        }
+
+        List<Love> yes = likeRepository.findByLikeIdAndSta(id, "yes");
+        List<Love> byUserId = likeRepository.findByUserId(id);
         List<Love> byLikeId = likeRepository.findByLikeId(id);
 
+
         for (Love love : byLikeId) {
-            if (love.getSta() == null){
+            if ("no".equals(love.getSta())){
                 Map map = new HashMap();
                 map.put("id",love.getUserId());
-                BaseResp byId = userClient.findById(map);
-                userList.add((User)byId.getData());
-            }
-            //好友
-            if (love.getSta() == "yes"){
-                Map map = new HashMap();
-                map.put("id",love.getUserId());
-                BaseResp byId = userClient.findById(map);
-                hobbyList.add((User)byId.getData());
+                BaseResp data = userClient.findById(map);
+                //Object data = byId.getData();
+                User user = JSONObject.parseObject(JSONObject.toJSON(data).toString(), User.class);
+                noShow.add(user);
             }
         }
 
-        //自己不喜欢的
-        List<Love> byUserId = likeRepository.findByUserId(id);
+        for (Love love : yes) {
+            Map map = new HashMap();
+            map.put("id",love.getUserId());
+            BaseResp data = userClient.findById(map);
+            //User user = (User) byId.getData();
+            User user = JSONObject.parseObject(JSONObject.toJSON(data).toString(), User.class);
+            noShow.add(user);
+        }
+
         for (Love love : byUserId) {
-            if (love.getSta() == "no"){
+            if ("yes".equals(love.getSta())){
                 Map map = new HashMap();
-                map.put("id",love.getLikeId());
-                BaseResp byId = userClient.findById(map);
-                noLikeList.add((User)byId.getData());
+                map.put("id",love.getUserId());
+                BaseResp data = userClient.findById(map);
+                //User user = (User) byId.getData();
+                User user = JSONObject.parseObject(JSONObject.toJSON(data).toString(), User.class);
+                noShow.add(user);
             }
-            if (love.getSta() == "yes"){
+            if ("no".equals(love.getSta())){
                 Map map = new HashMap();
-                map.put("id",love.getLikeId());
-                BaseResp byId = userClient.findById(map);
-                hobbyList.add((User)byId.getData());
+                map.put("id",love.getUserId());
+                BaseResp data = userClient.findById(map);
+                //User user = (User) byId.getData();
+                User user = JSONObject.parseObject(JSONObject.toJSON(data).toString(), User.class);
+                noShow.add(user);
             }
         }
-
-        //查所有
-        List<User> list = userClient.selectAll();
-        for (User o : list) {
-            for (User user : userList) {
-                if (o.getId() == user.getId()){
-                    list.remove(o);
-                }
-            }
-
-            for (User user : noLikeList) {
-                if (o.getId() == user.getId()){
-                    list.remove(o);
-                }
-            }
-
-            for (User user : hobbyList) {
-                if (o.getId() == user.getId()){
-                    list.remove(o);
-                }
-            }
-                userList.add(o);
+        if (true){
+            Map map = new HashMap();
+            map.put("id",id);
+            BaseResp byId = userClient.findById(map);
+            Object data = byId.getData();
+            User user = JSONObject.parseObject(JSONObject.toJSON(data).toString(), User.class);
+            noShow.add(user);
         }
-        User user = null;
-        for (User user1 : userList) {
-            if (user1.getId() == id){
-                user = user1;
+
+        User user1 = userClient.selectIdRandom();
+        for (User user : noShow) {
+            boolean b = user1.getId() == user.getId();
+            if (b){
+                user1 = userClient.selectIdRandom();
             }
         }
-        userList.remove(user);
-        BaseResp baseResp = new BaseResp();
         baseResp.setCode(200);
-        baseResp.setData(userList);
+        baseResp.setData(user1);
         baseResp.setMessage("查询成功");
-        baseResp.setCount(Long.valueOf(userList.size()));
         return baseResp;
-
 
     }
 

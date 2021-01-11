@@ -21,4 +21,6 @@ public interface UserService {
     List<User> selectAll();
 
     BaseResp selectById( Integer id);
+
+    User selectIdRandom();
 }

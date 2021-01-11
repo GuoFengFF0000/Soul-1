@@ -16,9 +16,12 @@ public interface UserClient {
     @RequestMapping("/user/findAll")
     public BaseResp findAll();
 
-    @RequestMapping(value = "/findById",method = RequestMethod.POST)
+    @RequestMapping(value = "/user/findById",method = RequestMethod.POST)
     public BaseResp findById(@RequestBody Map map);
 
     @RequestMapping("/user/selectAll")
     public List<User> selectAll();
+
+    @RequestMapping("/user/selectIdRandom")
+    public User selectIdRandom();
 }
