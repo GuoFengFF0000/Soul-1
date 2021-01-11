@@ -45,8 +45,13 @@ public class LoveServiceImpl implements LoveService {
         List<Love> byLikeIdAndSta = likeRepository.findByLikeIdAndSta(id, null);
 
         if (byLikeIdAndSta.size() != 0) {
+            Map map = new HashMap();
+            map.put("id",byLikeIdAndSta.get(0).getUserId());
+            BaseResp byId = userClient.findById(map);
+            Object data1 = byId.getData();
+            User user = JSONObject.parseObject(JSONObject.toJSON(data1).toString(), User.class);
             baseResp.setCode(200);
-            baseResp.setData(byLikeIdAndSta.get(0));
+            baseResp.setData(user);
             baseResp.setMessage("查询成功");
             return baseResp;
         }
@@ -166,7 +171,7 @@ public class LoveServiceImpl implements LoveService {
             boolean b = user1.getId() == user.getId();
             if (b) {
                 user1 = userClient.selectIdRandom();
-                getUser(user1, noShow);
+                user1 =  getUser(user1, noShow);
             }
         }
         return user1;
