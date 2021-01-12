@@ -19,6 +19,10 @@
         <module>s-pojo</module>
         <module>s-config</module>
         <module>s-send</module>
+        <module>s-tv</module>
+        <module>s-chat</module>
+        <module>s-anchor</module>
+        <module>s-gift</module>
     </modules>
 
     <parent>

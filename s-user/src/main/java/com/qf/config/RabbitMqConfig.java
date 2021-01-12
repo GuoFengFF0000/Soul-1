@@ -14,4 +14,9 @@ public class RabbitMqConfig {
     public Queue queue(){
         return new Queue("send-mail");
     }
+
+    @Bean(name = "gift")
+    public Queue queue1(){
+        return new Queue(("gift"));
+    }
 }

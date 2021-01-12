@@ -56,4 +56,9 @@ public class UserController {
         return userService.selectById(Integer.valueOf(map.get("id").toString()));
     }
 
+    //礼物打赏
+    @RequestMapping(value = "/gift",method = RequestMethod.POST)
+    public BaseResp gift(@RequestBody Map map){
+        return userService.gift(map);
+    }
 }

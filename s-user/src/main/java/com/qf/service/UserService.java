@@ -4,7 +4,7 @@ import com.qf.pojo.rep.UserRep;
 import com.qf.pojo.resp.BaseResp;
 import com.qf.pojo.vo.User;
 
-
+import java.util.Map;
 
 
 public interface UserService {
@@ -21,4 +21,6 @@ public interface UserService {
     BaseResp selectAll();
 
     BaseResp selectById( Integer id);
+
+    BaseResp gift(Map map);
 }

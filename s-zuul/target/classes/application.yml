@@ -10,3 +10,4 @@ eureka:
 #当使用zuul进行请求
 zuul:
   sensitive-headers:
+

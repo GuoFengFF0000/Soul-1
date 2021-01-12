@@ -1,8 +1,12 @@
 package com.qf.service.impl;
+import com.alibaba.fastjson.JSONObject;
+import com.qf.client.GiftClient;
 import com.qf.dao.UserMapper;
 import com.qf.dao.UserRepository;
 import com.qf.pojo.rep.UserRep;
 import com.qf.pojo.resp.BaseResp;
+import com.qf.pojo.vo.Anchor;
+import com.qf.pojo.vo.Gift;
 import com.qf.pojo.vo.User;
 import com.qf.service.UserService;
 import com.qf.utils.JWTUtils;
@@ -22,12 +26,17 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
 
-
     @Autowired
     RabbitTemplate rabbitTemplate;
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    AnchorClient anchorClient;
+
+    @Autowired
+    GiftClient giftClient;
 
     @Override
     public BaseResp login(UserRep userRep) {
@@ -169,5 +178,66 @@ public class UserServiceImpl implements UserService {
         return baseResp;
     }
 
+    @Override
+    public BaseResp gift(Map map) {
+        BaseResp baseResp = new BaseResp();
+
+        int uid = Integer.valueOf(String.valueOf(map.get("uid")));
+        int aid = Integer.valueOf(String.valueOf(map.get("aid")));;
+        int gid = Integer.valueOf(String.valueOf(map.get("gid")));;
+        int num = Integer.valueOf(String.valueOf(map.get("num")));;
+
+//        int uid = (Integer) map.get("uid");
+//        int aid = (Integer) map.get("aid");
+//        int gid = (Integer) map.get("gid");
+//        int num = (Integer) map.get("num");
+
+        Optional<User> userById = userRepository.findById(uid);
+
+        Anchor anchor=null;
+        BaseResp anchorById = anchorClient.findById(aid);
+        if (anchorById.getCode()==200){
+            Object data = anchorById.getData();
+            Object o = JSONObject.toJSON(data);
+            anchor = JSONObject.parseObject(o.toString(), Anchor.class);
+//            anchor = (Anchor) anchorById.getData();
+        }
+
+        Gift gift=null;
+        BaseResp giftById = giftClient.findById(gid);
+        if (giftById.getCode()==200){
+            Object data = giftById.getData();
+            Object o = JSONObject.toJSON(data);
+            gift = JSONObject.parseObject(o.toString(), Gift.class);
+//            gift = (Gift) giftById.getData();
+        }
+
+        double total = gift.getPrice() * num;
+
+        if (userById.isPresent() && anchor!=null && gift!=null){
+            User user = userById.get();
+            if (user.getBalance()==null||user.getBalance() < total){
+                baseResp.setCode(300);
+                baseResp.setMessage("余额不足!");
+                return baseResp;
+            }else {
+                user.setBalance(user.getBalance() - total);
+                User user1 = userRepository.saveAndFlush(user);
+
+                anchor.setBalance(anchor.getBalance() + total);
+//                anchorClient.insertOrUpdate(anchor);
+                rabbitTemplate.convertAndSend("","gift",anchor);
+
+                baseResp.setCode(200);
+                baseResp.setMessage(user1.getUserName()+"送了"+num+"个"+gift.getName());
+                baseResp.setData(user1);
+                return baseResp;
+            }
+        }else {
+            baseResp.setCode(300);
+            baseResp.setMessage("用户不存在");
+            return baseResp;
+        }
+    }
 
 }
