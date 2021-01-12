@@ -12,8 +12,8 @@ import java.util.Map;
  * baiYu
  */
 @RestController
-@RequestMapping("/like")
-@CrossOrigin
+@RequestMapping("/love")
+//@CrossOrigin
 public class LoveController {
 
     @Autowired

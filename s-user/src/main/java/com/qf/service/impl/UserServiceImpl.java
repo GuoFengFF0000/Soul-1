@@ -85,10 +85,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public BaseResp findById(Integer id) {
         BaseResp baseResp = new BaseResp();
-        Optional<User> byId = userRepository.findById(id);
-        if(byId.isPresent()){
+        User user = userRepository.findById(id).get();
+        if(user != null){
             baseResp.setCode(200);
-            baseResp.setData(byId.get());
+            baseResp.setData(user);
             baseResp.setMessage("查询一个成功");
             return baseResp;
         }
@@ -174,6 +174,12 @@ public class UserServiceImpl implements UserService {
         baseResp.setCode(201);
         baseResp.setMessage("查询失败");
         return baseResp;
+    }
+
+    @Override
+    public User selectIdRandom() {
+        User user = userMapper.selectIdRandom();
+        return user;
     }
 
 
