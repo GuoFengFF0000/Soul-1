@@ -1,34 +1,31 @@
-package com.qf.mySocket;
-
+package com.qf.MySocket;
 import org.springframework.stereotype.Component;
 
-import javax.websocket.OnClose;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
+import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 @Component
-@ServerEndpoint("/webSocket/{shopId}")
+@ServerEndpoint("/websocket/{id}/{name}")
+//此注解相当于设置访问URL
 public class WebSocket {
 
     private Session session;
 
-    private static CopyOnWriteArraySet<WebSocket> webSockets = new CopyOnWriteArraySet<>();
+    private static CopyOnWriteArraySet<WebSocket> webSockets =new CopyOnWriteArraySet<>();
+    private static Map<String,Session> sessionPool = new HashMap<String,Session>();
 
-    private static Map<String, Session> sessionPool = new HashMap<String , Session>();
 
     @OnOpen
-    public void onOpen(Session session, @PathParam(value="shopId")String shopId) {
+    public void onOpen(Session session, @PathParam(value="id")String shopId,@PathParam("name")String name) {
         this.session = session;
         webSockets.add(this);
         sessionPool.put(shopId, session);
         System.out.println("【websocket消息】有新的连接，总数为:"+webSockets.size());
+
+        sendAllMessage(name+":  进入直播间");
     }
 
     @OnClose
@@ -44,6 +41,7 @@ public class WebSocket {
 
     // 此为广播消息
     public void sendAllMessage(String message) {
+
         for(WebSocket webSocket : webSockets) {
             System.out.println("【websocket消息】广播消息:"+message);
             try {
@@ -55,8 +53,8 @@ public class WebSocket {
     }
 
     // 此为单点消息
-    public void sendOneMessage(String shopId, String message) {
-        Session session = sessionPool.get(shopId);
+    public void sendOneMessage(String id, String message) {
+        Session session = sessionPool.get(id);
         if (session != null) {
             try {
                 session.getAsyncRemote().sendText(message);
@@ -65,5 +63,7 @@ public class WebSocket {
             }
         }
     }
-
 }
+
+
+
