@@ -168,10 +168,7 @@ public class LoveServiceImpl implements LoveService {
 
     @Override
     public List<User> findFriend(Map map) {
-        JWTUtils jwtUtils = new JWTUtils();
-        String token = (String) map.get("token");
-        Map verify = jwtUtils.Verify(token);
-        Integer id = (Integer) verify.get("id");
+        Integer id = (Integer) map.get("id");
 
         List<User> friendList = new ArrayList<>();
 

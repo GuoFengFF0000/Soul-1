@@ -16,12 +16,13 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.websocket.*;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@ServerEndpoint("/chat")
+@ServerEndpoint("/chat/{id}")
 @Component
 public class ChatEndpoint {
 
@@ -41,14 +42,8 @@ public class ChatEndpoint {
     private CookieUtils cookieUtils = new CookieUtils();
 
     @OnOpen
-    public void onOpen(Session session){
+    public void onOpen(Session session, @PathParam("id")Integer id){
         this.session = session;
-        Cookie[] cookies = httpServletRequest.getCookies();
-        CookieUtils cookieUtils = new CookieUtils();
-        String token = cookieUtils.getToken(cookies);
-        JWTUtils jwtUtils = new JWTUtils();
-        Map verify = jwtUtils.Verify(token);
-        Integer id = (Integer) verify.get("id");
         Map map = new HashMap();
         map.put("id",id);
         BaseResp byId = userClient.findById(map);
@@ -62,12 +57,8 @@ public class ChatEndpoint {
 
     }
 
-    private void broadcastAllUsers(Map id, String message){
-
-        Cookie[] cookies = httpServletRequest.getCookies();
-        String token = cookieUtils.getToken(cookies);
-        id.put("token",token);
-        List<User> friend = likeClient.findFriend(id);
+    private void broadcastAllUsers(Map map, String message){
+        List<User> friend = likeClient.findFriend(map);
         List<String> list = new ArrayList<>();
         for (User user : friend) {
             list.add(user.getEmail());
@@ -91,7 +82,7 @@ public class ChatEndpoint {
     }
 
     @OnMessage
-    public void onMessage(String message){
+    public void onMessage(String message,@PathParam("id")Integer id){
 
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -99,12 +90,6 @@ public class ChatEndpoint {
             String toEmail = mess.getToEmail();
             String data = mess.getMessage();
 
-            Cookie[] cookies = httpServletRequest.getCookies();
-            CookieUtils cookieUtils = new CookieUtils();
-            String token = cookieUtils.getToken(cookies);
-            JWTUtils jwtUtils = new JWTUtils();
-            Map verify = jwtUtils.Verify(token);
-            Integer id = (Integer) verify.get("id");
             Map map = new HashMap();
             map.put("id",id);
             BaseResp byId = userClient.findById(map);
