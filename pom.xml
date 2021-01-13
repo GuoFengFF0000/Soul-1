@@ -19,6 +19,9 @@
         <module>s-pojo</module>
         <module>s-config</module>
         <module>s-circle of friends</module>
+        <module>s-send</module>
+        <module>s-talk</module>
+        <module>s-like</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -46,14 +49,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>1.16.22</version>
                 <scope>provided</scope>
             </dependency>
-
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>

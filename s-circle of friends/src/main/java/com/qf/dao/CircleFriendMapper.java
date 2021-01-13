@@ -1,6 +1,8 @@
 package com.qf.dao;
 
-import com.qf.pojo.CircleFriends;
+import com.qf.pojo.vo.CircleFriends;
+import com.qf.pojo.vo.Follow;
+import com.qf.pojo.vo.Remark;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -26,4 +28,16 @@ public interface CircleFriendMapper {
     List adminFriendFindAll();
 
     CircleFriends adminFriendFindByCfId(@Param("cfId") Integer cfId);
+
+    int insertRemark(Remark remark);
+
+    List findAllRemarkByCfId(@Param("cfId") Integer cfId);
+
+    int addFollow(Follow follow);
+
+    int findFollowByUid(@Param("uid") Integer uid);
+
+    int findFollowByFollowUser(@Param("followUser") String followUser);
+
+    List findFollowFriends(@Param("id")Integer id);
 }
