@@ -4,5 +4,8 @@ com\qf\pojo\rep\UserRep.class
 com\qf\pojo\vo\Anchor.class
 com\qf\pojo\vo\Gift.class
 com\qf\pojo\vo\User.class
+com\qf\pojo\resp\ResultMessage.class
 com\qf\pojo\vo\Love.class
+com\qf\pojo\resp\WS.class
+com\qf\pojo\rep\Message.class
 com\qf\pojo\vo\TV.class

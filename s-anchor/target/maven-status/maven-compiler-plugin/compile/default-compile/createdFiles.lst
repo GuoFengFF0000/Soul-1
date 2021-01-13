@@ -1,6 +1,0 @@
-com\qf\AnchorApplication.class
-com\qf\service\AnchorService.class
-com\qf\service\impl\AnchorServiceImpl.class
-com\qf\dao\AnchorRepository.class
-com\qf\controller\AnchorController.class
-com\qf\listener\AnchorListener.class

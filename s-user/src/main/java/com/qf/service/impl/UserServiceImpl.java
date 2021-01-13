@@ -9,6 +9,7 @@ import com.qf.pojo.vo.Anchor;
 import com.qf.pojo.vo.Gift;
 import com.qf.pojo.vo.User;
 import com.qf.service.UserService;
+import com.qf.utils.CookieUtils;
 import com.qf.utils.JWTUtils;
 import com.qf.utils.RedisUtils;
 import com.sun.org.apache.bcel.internal.generic.NEW;
@@ -17,6 +18,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -238,5 +241,6 @@ public class UserServiceImpl implements UserService {
             return baseResp;
         }
     }
+
 
 }
