@@ -39,7 +39,7 @@ public class ChatEndpoint {
     LikeClient likeClient;
 
     @OnOpen
-    public void onOpen(Session session, EndpointConfig config){
+    public void onOpen(Session session){
         this.session = session;
         Cookie[] cookies = httpServletRequest.getCookies();
         CookieUtils cookieUtils = new CookieUtils();
@@ -86,7 +86,7 @@ public class ChatEndpoint {
     }
 
     @OnMessage
-    public void onMessage(String message,Session session){
+    public void onMessage(String message){
 
         try {
             ObjectMapper mapper = new ObjectMapper();
