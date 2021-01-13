@@ -166,6 +166,40 @@ public class LoveServiceImpl implements LoveService {
 
     }
 
+    @Override
+    public List<User> findFriend(HttpServletRequest req, Map map) {
+        Cookie[] cookies = req.getCookies();
+        String token = cookieUtils.getToken(cookies);
+        JWTUtils jwtUtils = new JWTUtils();
+        Map verify = jwtUtils.Verify(token);
+        Integer id = (Integer) verify.get("id");
+
+        List<User> friendList = new ArrayList<>();
+
+        List<Love> yes = likeRepository.findByLikeIdAndSta(id, "yes");
+        List<Love> yse = likeRepository.findByUserIdAndSta(id, "yes");
+        for (Love love : yes) {
+            Map maps = new HashMap();
+            maps.put("id",love.getUserId());
+            BaseResp byId = userClient.findById(maps);
+            Object data1 = byId.getData();
+            User user = JSONObject.parseObject(JSONObject.toJSON(data1).toString(), User.class);
+            friendList.add(user);
+        }
+
+        for (Love love : yse) {
+            Map maps = new HashMap();
+            maps.put("id",love.getUserId());
+            BaseResp byId = userClient.findById(maps);
+            Object data1 = byId.getData();
+            User user = JSONObject.parseObject(JSONObject.toJSON(data1).toString(), User.class);
+            friendList.add(user);
+        }
+
+        return friendList;
+
+    }
+
     public User getUser(User user1, List<User> noShow) {
         for (User user : noShow) {
             boolean b = user1.getId() == user.getId();

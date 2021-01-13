@@ -8,11 +8,13 @@ import java.util.List;
 
 public interface LoveRepository extends JpaRepository<Love,Integer>{
 
-    public Love findByLikeIdAndUserId(Integer likeId, Integer userId);
+    Love findByLikeIdAndUserId(Integer likeId, Integer userId);
 
     List<Love> findByUserId(Integer userId);
 
     List<Love> findByLikeId(Integer likeId);
 
     List<Love> findByLikeIdAndSta(Integer likeId,String sta);
+
+    List<Love> findByUserIdAndSta(Integer id, String sta);
 }
