@@ -1,0 +1,9 @@
+server:
+  port: 8016
+spring:
+  application:
+    name: s-webSocket
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8000/eureka

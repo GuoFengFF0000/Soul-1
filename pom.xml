@@ -21,6 +21,7 @@
         <module>s-send</module>
         <module>s-talk</module>
         <module>s-like</module>
+        <module>s-webSocket</module>
     </modules>
 
     <parent>

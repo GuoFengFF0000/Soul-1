@@ -22,17 +22,18 @@ public class UserController {
     public BaseResp login(@RequestBody UserRep userRep){
         return userService.login(userRep);
     }
+
     //注册
     @RequestMapping(value = "/registry",method = RequestMethod.POST)
     public BaseResp registry(@RequestBody UserRep UserReq){
         return userService.registry(UserReq);
     }
+
     //账号激活状态
     @RequestMapping("/editStatus/{id}")
     public BaseResp editStatus(@PathVariable("id")Integer id){
         return userService.editStatus(id);
     }
-
 
     //后台查所有
     @RequestMapping("/findAll")
