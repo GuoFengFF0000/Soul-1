@@ -167,10 +167,9 @@ public class LoveServiceImpl implements LoveService {
     }
 
     @Override
-    public List<User> findFriend(HttpServletRequest req, Map map) {
-        Cookie[] cookies = req.getCookies();
-        String token = cookieUtils.getToken(cookies);
+    public List<User> findFriend(Map map) {
         JWTUtils jwtUtils = new JWTUtils();
+        String token = (String) map.get("token");
         Map verify = jwtUtils.Verify(token);
         Integer id = (Integer) verify.get("id");
 

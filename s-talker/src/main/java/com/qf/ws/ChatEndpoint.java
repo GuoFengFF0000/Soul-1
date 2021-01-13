@@ -38,6 +38,8 @@ public class ChatEndpoint {
     @Autowired
     LikeClient likeClient;
 
+    private CookieUtils cookieUtils = new CookieUtils();
+
     @OnOpen
     public void onOpen(Session session){
         this.session = session;
@@ -62,7 +64,10 @@ public class ChatEndpoint {
 
     private void broadcastAllUsers(Map id, String message){
 
-        List<User> friend = likeClient.findFriend(httpServletRequest,id);
+        Cookie[] cookies = httpServletRequest.getCookies();
+        String token = cookieUtils.getToken(cookies);
+        id.put("token",token);
+        List<User> friend = likeClient.findFriend(id);
         List<String> list = new ArrayList<>();
         for (User user : friend) {
             list.add(user.getEmail());

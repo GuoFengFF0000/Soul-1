@@ -38,7 +38,7 @@ public class LoveController {
     }
 
     @RequestMapping(value = "/findFriend",method = RequestMethod.POST)
-    public List<User> findFriend(HttpServletRequest req,@RequestBody Map map){
-        return likeService.findFriend(req,map);
+    public List<User> findFriend(@RequestBody Map map){
+        return likeService.findFriend(map);
     }
 }

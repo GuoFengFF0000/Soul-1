@@ -14,6 +14,7 @@ import java.util.Map;
 public interface LikeClient {
 
     @RequestMapping(value = "/findFriend",method = RequestMethod.POST)
-    public List<User> findFriend(HttpServletRequest req, @RequestBody Map map);
+    public List<User> findFriend(@RequestBody Map map);
+
 
 }

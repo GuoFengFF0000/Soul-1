@@ -14,5 +14,5 @@ public interface LoveService {
 
     BaseResp noLike(HttpServletRequest req, Map map);
 
-    List<User> findFriend(HttpServletRequest req, Map map);
+    List<User> findFriend(Map map);
 }
