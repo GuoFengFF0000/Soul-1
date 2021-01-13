@@ -27,4 +27,9 @@ public class AnchorController {
     public BaseResp insertOrUpdate(@RequestBody Anchor anchor){
         return anchorService.insertOrUpdate(anchor);
     }
+
+    @RequestMapping(value = "/top",method = RequestMethod.GET)
+    public BaseResp top(@RequestParam("id")Integer id){
+        return anchorService.top(id);
+    }
 }

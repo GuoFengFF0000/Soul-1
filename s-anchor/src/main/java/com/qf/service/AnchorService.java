@@ -9,4 +9,7 @@ public interface AnchorService {
     BaseResp findById(Integer id);
 
     BaseResp insertOrUpdate(Anchor anchor);
+
+    BaseResp top(Integer id);
+
 }

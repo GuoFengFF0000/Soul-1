@@ -10,6 +10,7 @@ import com.qf.pojo.vo.Gift;
 import com.qf.pojo.vo.User;
 import com.qf.service.UserService;
 import com.qf.utils.JWTUtils;
+import com.qf.utils.RedisUtils;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
@@ -35,6 +36,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     GiftClient giftClient;
+
+    @Autowired
+    RedisUtils redisUtils;
 
     @Override
     public BaseResp login(UserRep userRep) {
@@ -212,7 +216,16 @@ public class UserServiceImpl implements UserService {
                 anchor.setBalance(total);
                 rabbitTemplate.convertAndSend("gift",anchor);
 
-
+                Double aDouble = redisUtils.ZScore(String.valueOf(aid), user1.getUserName());
+                if (aDouble==null){
+                    redisUtils.ZSet(String.valueOf(aid),user1.getUserName(),total);
+                    System.out.println(redisUtils.ZScore(String.valueOf(aid), user1.getUserName()));
+                    System.out.println(redisUtils.ZRevRangeWithScores(String.valueOf(aid),0,-1).toArray().toString());
+                }else {
+                    redisUtils.ZIncrScore(String.valueOf(aid),user1.getUserName(),total);
+                    System.out.println(redisUtils.ZScore(String.valueOf(aid), user1.getUserName()));
+                    System.out.println(redisUtils.ZRevRangeWithScores(String.valueOf(aid),0,-1).toArray().toString());
+                }
 
                 baseResp.setCode(200);
                 baseResp.setMessage(user1.getUserName()+"送了"+num+"个"+gift.getName());
