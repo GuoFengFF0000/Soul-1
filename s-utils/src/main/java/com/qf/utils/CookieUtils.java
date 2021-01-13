@@ -1,9 +1,10 @@
 package com.qf.utils;
+import org.springframework.stereotype.Component;
+
 import javax.servlet.http.Cookie;
 
-
+@Component
 public class CookieUtils {
-
 
     public String getToken(Cookie[] cookies){
             String token ="";

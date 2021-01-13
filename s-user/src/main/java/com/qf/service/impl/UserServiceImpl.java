@@ -5,12 +5,15 @@ import com.qf.pojo.rep.UserRep;
 import com.qf.pojo.resp.BaseResp;
 import com.qf.pojo.vo.User;
 import com.qf.service.UserService;
+import com.qf.utils.CookieUtils;
 import com.qf.utils.JWTUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +24,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
-
 
     @Autowired
     RabbitTemplate rabbitTemplate;
@@ -181,6 +183,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.selectIdRandom();
         return user;
     }
+
 
 
 }

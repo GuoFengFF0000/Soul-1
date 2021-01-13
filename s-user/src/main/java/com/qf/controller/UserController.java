@@ -7,6 +7,7 @@ import com.qf.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -58,6 +59,7 @@ public class UserController {
     public BaseResp selectById(@RequestBody Map map){
         return userService.selectById(Integer.valueOf(map.get("id").toString()));
     }
+    
 
     //查询一个  随机id
     @RequestMapping("/selectIdRandom")
