@@ -1,0 +1,18 @@
+server:
+  port: 8031
+spring:
+  application:
+    name: s-talk
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/soul?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    password: root
+    username: root
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8000/eureka/
+  instance:
+    prefer-ip-address: true
+    hostName: ${spring.cloud.client.ip-address}
+    instance-id: http://${spring.cloud.client.ip-address}:${server.port}

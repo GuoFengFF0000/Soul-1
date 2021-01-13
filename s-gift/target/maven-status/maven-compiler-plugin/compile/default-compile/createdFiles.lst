@@ -1,0 +1,5 @@
+com\qf\GiftApplication.class
+com\qf\service\GiftService.class
+com\qf\service\impl\GiftServiceImpl.class
+com\qf\controller\GiftController.class
+com\qf\dao\GiftRepository.class

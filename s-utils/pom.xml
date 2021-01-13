@@ -33,6 +33,11 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.qf</groupId>
+            <artifactId>s-pojo</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
 
 
         <dependency>

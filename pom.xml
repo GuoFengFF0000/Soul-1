@@ -20,8 +20,13 @@
         <module>s-config</module>
         <module>s-circle of friends</module>
         <module>s-send</module>
-        <module>s-talk</module>
+        <module>s-tv</module>
+        <module>s-chat</module>
+        <module>s-gift</module>
+        <module>s-webSocket</module>
         <module>s-like</module>
+        <module>s-anchors</module>
+        <module>s-talker</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

@@ -6,7 +6,6 @@ import javax.servlet.http.Cookie;
 @Component
 public class CookieUtils {
 
-
     public String getToken(Cookie[] cookies){
             String token ="";
         if (cookies==null||cookies.length==0){

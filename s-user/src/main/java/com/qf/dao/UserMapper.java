@@ -9,5 +9,5 @@ import java.util.List;
 public interface UserMapper {
     List<User> selectAll();
 
-   List<User> selectById(@Param("id") Integer id);
+    List<User> selectById(@Param("id") Integer id);
 }

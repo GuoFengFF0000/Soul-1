@@ -4,7 +4,7 @@ import com.qf.pojo.rep.UserRep;
 import com.qf.pojo.resp.BaseResp;
 import com.qf.pojo.vo.User;
 
-import java.util.List;
+import java.util.Map;
 
 
 public interface UserService {
@@ -18,7 +18,9 @@ public interface UserService {
 
     BaseResp editStatus(Integer id);
 
-    List<User> selectAll();
+    BaseResp selectAll();
 
     BaseResp selectById( Integer id);
+
+    BaseResp gift(Map map);
 }

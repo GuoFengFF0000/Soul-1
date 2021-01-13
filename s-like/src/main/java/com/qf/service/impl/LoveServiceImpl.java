@@ -1,5 +1,6 @@
 package com.qf.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.qf.client.UserClient;
 import com.qf.dao.LoveRepository;
 import com.qf.pojo.resp.BaseResp;
@@ -31,87 +32,78 @@ public class LoveServiceImpl implements LoveService {
 
     @Override
     public BaseResp findRandom(HttpServletRequest req) {
+        BaseResp baseResp = new BaseResp();
         Cookie[] cookies = req.getCookies();
         String token = cookieUtils.getToken(cookies);
         JWTUtils jwtUtils = new JWTUtils();
         Map verify = jwtUtils.Verify(token);
         Integer id = (Integer) verify.get("id");
 
-        List<User> userList = new ArrayList<>();
-
-        List<User> hobbyList = new ArrayList<>();
-
-        List<User> noLikeList = new ArrayList<>();
+        List<User> noShow = new ArrayList<>();
 
         //喜欢自己的
+        List<Love> byLikeIdAndSta = likeRepository.findByLikeIdAndSta(id, null);
+
+        if (byLikeIdAndSta.size() != 0) {
+            Map map = new HashMap();
+            map.put("id",byLikeIdAndSta.get(0).getUserId());
+            BaseResp byId = userClient.findById(map);
+            Object data1 = byId.getData();
+            User user = JSONObject.parseObject(JSONObject.toJSON(data1).toString(), User.class);
+            baseResp.setCode(200);
+            baseResp.setData(user);
+            baseResp.setMessage("查询成功");
+            return baseResp;
+        }
+
+        List<Love> yes = likeRepository.findByLikeIdAndSta(id, "yes");
+        List<Love> byUserId = likeRepository.findByUserId(id);
         List<Love> byLikeId = likeRepository.findByLikeId(id);
 
+
         for (Love love : byLikeId) {
-            if (love.getSta() == null){
+            if ("no".equals(love.getSta())) {
                 Map map = new HashMap();
-                map.put("id",love.getUserId());
-                BaseResp byId = userClient.findById(map);
-                userList.add((User)byId.getData());
-            }
-            //好友
-            if (love.getSta() == "yes"){
-                Map map = new HashMap();
-                map.put("id",love.getUserId());
-                BaseResp byId = userClient.findById(map);
-                hobbyList.add((User)byId.getData());
+                map.put("id", love.getUserId());
+                BaseResp data = userClient.findById(map);
+                Object data1 = data.getData();
+                User user = JSONObject.parseObject(JSONObject.toJSON(data1).toString(), User.class);
+                noShow.add(user);
             }
         }
 
-        //自己不喜欢的
-        List<Love> byUserId = likeRepository.findByUserId(id);
+        for (Love love : yes) {
+            Map map = new HashMap();
+            map.put("id", love.getUserId());
+            BaseResp data = userClient.findById(map);
+            Object data1 = data.getData();
+            User user = JSONObject.parseObject(JSONObject.toJSON(data1).toString(), User.class);
+            noShow.add(user);
+        }
+
         for (Love love : byUserId) {
-            if (love.getSta() == "no"){
-                Map map = new HashMap();
-                map.put("id",love.getLikeId());
-                BaseResp byId = userClient.findById(map);
-                noLikeList.add((User)byId.getData());
-            }
-            if (love.getSta() == "yes"){
-                Map map = new HashMap();
-                map.put("id",love.getLikeId());
-                BaseResp byId = userClient.findById(map);
-                hobbyList.add((User)byId.getData());
-            }
+            Map map = new HashMap();
+            map.put("id", love.getLikeId());
+            BaseResp data = userClient.findById(map);
+            Object data1 = data.getData();
+            User user = JSONObject.parseObject(JSONObject.toJSON(data1).toString(), User.class);
+            noShow.add(user);
+        }
+        if (true) {
+            Map map = new HashMap();
+            map.put("id", id);
+            BaseResp byId = userClient.findById(map);
+            Object data = byId.getData();
+            User user = JSONObject.parseObject(JSONObject.toJSON(data).toString(), User.class);
+            noShow.add(user);
         }
 
-        //查所有
-        List<User> list = userClient.selectAll();
-        for (User o : list) {
-            for (User user : userList) {
-                if (o.getId() == user.getId()){
-                    list.remove(o);
-                }
-            }
-
-            for (User user : noLikeList) {
-                if (o.getId() == user.getId()){
-                    list.remove(o);
-                }
-            }
-
-            for (User user : hobbyList) {
-                if (o.getId() == user.getId()){
-                    list.remove(o);
-                }
-            }
-            if (o.getId() == id){
-                list.remove(o);
-            }
-
-            userList.add(o);
-        }
-        BaseResp baseResp = new BaseResp();
+        User user1 = userClient.selectIdRandom();
+        user1 = getUser(user1, noShow);
         baseResp.setCode(200);
-        baseResp.setData(userList);
+        baseResp.setData(user1);
         baseResp.setMessage("查询成功");
-        baseResp.setCount(Long.valueOf(userList.size()));
         return baseResp;
-
 
     }
 
@@ -125,7 +117,7 @@ public class LoveServiceImpl implements LoveService {
         Map verify = jwtUtils.Verify(token);
         Integer id = (Integer) verify.get("id");
         Love like = likeRepository.findByLikeIdAndUserId(id, likeId);
-        if (like == null){
+        if (like == null) {
             Love like1 = new Love();
             like1.setLikeId(likeId);
             like1.setUserId(id);
@@ -136,8 +128,8 @@ public class LoveServiceImpl implements LoveService {
         } else {
             like.setSta("yes");
             likeRepository.saveAndFlush(like);
-            baseResp.setCode(200);
-            baseResp.setMessage("互相喜欢");
+            baseResp.setCode(201);
+            baseResp.setMessage("互相喜欢成功");
             baseResp.setData(like);
             return baseResp;
         }
@@ -154,7 +146,7 @@ public class LoveServiceImpl implements LoveService {
         Map verify = jwtUtils.Verify(token);
         Integer id = (Integer) verify.get("id");
         Love like = likeRepository.findByLikeIdAndUserId(id, likeId);
-        if (like == null){
+        if (like == null) {
             Love love = new Love();
             love.setUserId(id);
             love.setLikeId(likeId);
@@ -173,4 +165,50 @@ public class LoveServiceImpl implements LoveService {
         }
 
     }
+
+    @Override
+    public List<User> findFriend(HttpServletRequest req, Map map) {
+        Cookie[] cookies = req.getCookies();
+        String token = cookieUtils.getToken(cookies);
+        JWTUtils jwtUtils = new JWTUtils();
+        Map verify = jwtUtils.Verify(token);
+        Integer id = (Integer) verify.get("id");
+
+        List<User> friendList = new ArrayList<>();
+
+        List<Love> yes = likeRepository.findByLikeIdAndSta(id, "yes");
+        List<Love> yse = likeRepository.findByUserIdAndSta(id, "yes");
+        for (Love love : yes) {
+            Map maps = new HashMap();
+            maps.put("id",love.getUserId());
+            BaseResp byId = userClient.findById(maps);
+            Object data1 = byId.getData();
+            User user = JSONObject.parseObject(JSONObject.toJSON(data1).toString(), User.class);
+            friendList.add(user);
+        }
+
+        for (Love love : yse) {
+            Map maps = new HashMap();
+            maps.put("id",love.getUserId());
+            BaseResp byId = userClient.findById(maps);
+            Object data1 = byId.getData();
+            User user = JSONObject.parseObject(JSONObject.toJSON(data1).toString(), User.class);
+            friendList.add(user);
+        }
+
+        return friendList;
+
+    }
+
+    public User getUser(User user1, List<User> noShow) {
+        for (User user : noShow) {
+            boolean b = user1.getId() == user.getId();
+            if (b) {
+                user1 = userClient.selectIdRandom();
+                user1 =  getUser(user1, noShow);
+            }
+        }
+        return user1;
+    }
+
 }

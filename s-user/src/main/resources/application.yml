@@ -3,9 +3,19 @@ server:
 spring:
   application:
     name: s-user
+
+  rabbitmq:
+    host: 121.4.40.111
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+#    publisher-confirms: true
+#    publisher-returns: true
+
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/soul?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    url: jdbc:mysql://localhost:3306/soul?useUnicode=true&characterEncoding=UTF-8
     password: root
     username: root
   jpa:
@@ -22,11 +32,8 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8000/eureka
-  instance:
-    prefer-ip-address: true
-    hostName: ${spring.cloud.client.ip-address}
-    instance-id: http://${spring.cloud.client.ip-address}:${server.port}
 
+#hystirx  与feign进行整合
 feign:
   hystrix:
     enabled: true
