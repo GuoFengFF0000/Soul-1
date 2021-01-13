@@ -2,18 +2,15 @@ package com.qf.controller;
 
 import com.qf.pojo.rep.UserRep;
 import com.qf.pojo.resp.BaseResp;
-import com.qf.pojo.vo.User;
 import com.qf.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
-//@CrossOrigin
+@CrossOrigin
 public class UserController {
 
     @Autowired
@@ -50,7 +47,7 @@ public class UserController {
 
     //随机查所有
     @RequestMapping("/selectAll")
-    public List<User> selectAll(){
+    public  BaseResp selectAll(){
         return userService.selectAll();
     }
 
@@ -59,12 +56,10 @@ public class UserController {
     public BaseResp selectById(@RequestBody Map map){
         return userService.selectById(Integer.valueOf(map.get("id").toString()));
     }
-    
 
-    //查询一个  随机id
-    @RequestMapping("/selectIdRandom")
-    public User selectIdRandom(){
-        return userService.selectIdRandom();
+    //礼物打赏
+    @RequestMapping(value = "/gift",method = RequestMethod.POST)
+    public BaseResp gift(@RequestBody Map map){
+        return userService.gift(map);
     }
-
 }

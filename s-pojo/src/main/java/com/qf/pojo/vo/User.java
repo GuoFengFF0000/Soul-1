@@ -23,6 +23,7 @@ public class User {
     private String word;
     private String constellation;
     private String message;
-//    private String HeadImageUrl;
     private Integer status;
+    //余额
+    private Double balance;
 }

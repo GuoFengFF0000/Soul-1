@@ -9,7 +9,5 @@ import java.util.List;
 public interface UserMapper {
     List<User> selectAll();
 
-   List<User> selectById(@Param("id") Integer id);
-
-    User selectIdRandom();
+    List<User> selectById(@Param("id") Integer id);
 }

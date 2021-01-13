@@ -14,3 +14,4 @@ eureka:
 #当使用zuul进行请求(携带cookie)
 zuul:
   sensitive-headers:
+
