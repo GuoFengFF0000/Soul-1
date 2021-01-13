@@ -10,8 +10,8 @@ spring:
     username: guest
     password: guest
     virtual-host: /
-    publisher-confirms: true
-    publisher-returns: true
+#    publisher-confirms: true
+#    publisher-returns: true
 
   datasource:
     driver-class-name: com.mysql.jdbc.Driver

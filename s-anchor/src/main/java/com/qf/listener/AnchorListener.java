@@ -1,5 +1,6 @@
 package com.qf.listener;
 
+import com.alibaba.fastjson.JSONObject;
 import com.qf.pojo.resp.BaseResp;
 import com.qf.pojo.vo.Anchor;
 import com.qf.service.AnchorService;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Component
 public class AnchorListener {
@@ -20,8 +22,18 @@ public class AnchorListener {
     @RabbitListener(queues = "gift")
     public void gift(Anchor anchor, Channel channel, Message message) throws IOException {
 
-        BaseResp baseResp = anchorService.insertOrUpdate(anchor);
+        Integer aid = anchor.getId();
+        Double total = anchor.getBalance();
 
-        channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
+        BaseResp byId = anchorService.findById(aid);
+
+        Object o = JSONObject.toJSON(byId.getData());
+        Anchor anchor1 = JSONObject.parseObject(o.toString(), Anchor.class);
+
+        anchor1.setBalance(anchor1.getBalance() + total);
+
+        BaseResp baseResp = anchorService.insertOrUpdate(anchor1);
+        System.out.println(baseResp.getMessage());
+
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RabbitMqConfig {
 
-    @Bean
+    @Bean(name = "send-mail")
     public Queue queue(){
         return new Queue("send-mail");
     }

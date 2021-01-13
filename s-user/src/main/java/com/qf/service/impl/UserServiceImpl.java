@@ -10,6 +10,7 @@ import com.qf.pojo.vo.Gift;
 import com.qf.pojo.vo.User;
 import com.qf.service.UserService;
 import com.qf.utils.JWTUtils;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +32,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserMapper userMapper;
-
-    @Autowired
-    AnchorClient anchorClient;
 
     @Autowired
     GiftClient giftClient;
@@ -187,21 +185,7 @@ public class UserServiceImpl implements UserService {
         int gid = Integer.valueOf(String.valueOf(map.get("gid")));;
         int num = Integer.valueOf(String.valueOf(map.get("num")));;
 
-//        int uid = (Integer) map.get("uid");
-//        int aid = (Integer) map.get("aid");
-//        int gid = (Integer) map.get("gid");
-//        int num = (Integer) map.get("num");
-
         Optional<User> userById = userRepository.findById(uid);
-
-        Anchor anchor=null;
-        BaseResp anchorById = anchorClient.findById(aid);
-        if (anchorById.getCode()==200){
-            Object data = anchorById.getData();
-            Object o = JSONObject.toJSON(data);
-            anchor = JSONObject.parseObject(o.toString(), Anchor.class);
-//            anchor = (Anchor) anchorById.getData();
-        }
 
         Gift gift=null;
         BaseResp giftById = giftClient.findById(gid);
@@ -209,12 +193,11 @@ public class UserServiceImpl implements UserService {
             Object data = giftById.getData();
             Object o = JSONObject.toJSON(data);
             gift = JSONObject.parseObject(o.toString(), Gift.class);
-//            gift = (Gift) giftById.getData();
         }
 
         double total = gift.getPrice() * num;
 
-        if (userById.isPresent() && anchor!=null && gift!=null){
+        if (userById.isPresent() && gift!=null){
             User user = userById.get();
             if (user.getBalance()==null||user.getBalance() < total){
                 baseResp.setCode(300);
@@ -224,9 +207,12 @@ public class UserServiceImpl implements UserService {
                 user.setBalance(user.getBalance() - total);
                 User user1 = userRepository.saveAndFlush(user);
 
-                anchor.setBalance(anchor.getBalance() + total);
-//                anchorClient.insertOrUpdate(anchor);
-                rabbitTemplate.convertAndSend("","gift",anchor);
+                Anchor anchor = new Anchor();
+                anchor.setId(aid);
+                anchor.setBalance(total);
+                rabbitTemplate.convertAndSend("gift",anchor);
+
+
 
                 baseResp.setCode(200);
                 baseResp.setMessage(user1.getUserName()+"送了"+num+"个"+gift.getName());

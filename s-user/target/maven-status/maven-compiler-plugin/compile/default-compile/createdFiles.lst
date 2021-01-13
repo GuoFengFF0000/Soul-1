@@ -1,0 +1,12 @@
+com\qf\interceptor\MyInterceptor.class
+com\qf\service\UserService.class
+com\qf\service\impl\UserServiceImpl.class
+com\qf\config\RabbitMqConfig.class
+com\qf\config\Swagger2Config.class
+com\qf\interceptor\MyWebConfig.class
+com\qf\UserApplication.class
+com\qf\controller\UserController.class
+com\qf\dao\UserRepository.class
+com\qf\client\GiftFallback.class
+com\qf\dao\UserMapper.class
+com\qf\client\GiftClient.class
