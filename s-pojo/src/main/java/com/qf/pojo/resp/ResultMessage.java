@@ -7,7 +7,7 @@ public class ResultMessage {
 
     private boolean isSystem;
 
-    private String fromEmail;
+    private String fromId;
 
     private Object message;
 
