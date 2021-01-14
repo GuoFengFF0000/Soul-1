@@ -189,7 +189,7 @@ public class LoveServiceImpl implements LoveService {
 
         for (Love love : yse) {
             Map maps = new HashMap();
-            maps.put("id",love.getUserId());
+            maps.put("id",love.getLikeId());
             BaseResp byId = userClient.findById(maps);
             Object data1 = byId.getData();
             User user = JSONObject.parseObject(JSONObject.toJSON(data1).toString(), User.class);
