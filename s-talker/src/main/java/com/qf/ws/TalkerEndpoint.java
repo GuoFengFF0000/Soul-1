@@ -28,12 +28,6 @@ public class TalkerEndpoint {
     public void onOpen(Session session, @PathParam(value = "id") String id) {
         this.session = session;
 
-//        Map map = new HashMap();
-//        map.put("id",id);
-//        BaseResp byId = userClient.findById(map);
-//        Object data1 = byId.getData();
-//        User user = JSONObject.parseObject(JSONObject.toJSON(data1).toString(), User.class);
-
         onlineUsers.put(id, this);
         addOnlineCount();
         sessionPool.put(id, session);//把对应用户id的session放到sessionPool中，用于单点信息发送
