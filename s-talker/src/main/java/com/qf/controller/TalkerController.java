@@ -14,11 +14,11 @@ public class TalkerController {
     @Autowired
     private TalkerEndpoint talkerEndpoint;
 
-    @RequestMapping("/sendOneWebSocketOneToOne/{id}/{message}")
-    public BaseResp sendOneWebSocketOneToOne(@PathVariable("id") String userId, @PathVariable("message") String message) {
+    @RequestMapping("/sendOneWebSocketOneToOne/{userId}/{message}/{id}")
+    public BaseResp sendOneWebSocketOneToOne(@PathVariable("userId") String userId, @PathVariable("message") String message,@PathVariable("id")String id) {
         BaseResp baseResp = new BaseResp();
         try {
-            talkerEndpoint.sendOneMessage(userId, message);
+            talkerEndpoint.sendOneMessage(userId, message,id);
             baseResp.setCode(200);
             baseResp.setMessage("发送成功");
         } catch (Exception e) {

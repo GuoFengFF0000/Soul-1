@@ -1,6 +1,7 @@
 package com.qf.ws;
 
 
+import com.qf.utils.MessageUtils;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -47,17 +48,18 @@ public class TalkerEndpoint {
         System.out.println("【websocket消息】收到客户端消息:" + message);
     }
 
-    public void sendOneMessage(String userId, String message) {
+    public void sendOneMessage(String userId, String message,String id) {
         try {
             // 防止推送到客户端的信息太多导致弹窗太快
             Thread.sleep(500);
             System.out.println("用户" + userId + "【websocket消息】单点消息:" + message);
+            String mess = MessageUtils.getMessage(false, id, message);
             Session session = sessionPool.get(userId);
             if (session != null) {
                 // getAsyncRemote是异步发送，加锁防止上一个消息还未发完下一个消息又进入了此方法
                 // 也就是防止多线程中同一个session多次被调用报错,虽然上面睡了0.5秒，为了保险最好加锁
                 synchronized (session) {
-                    session.getAsyncRemote().sendText(message);
+                    session.getAsyncRemote().sendText(mess);
                 }
             }
         } catch (Exception e) {
