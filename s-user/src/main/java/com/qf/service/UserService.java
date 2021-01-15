@@ -4,7 +4,9 @@ import com.qf.pojo.rep.UserRep;
 import com.qf.pojo.resp.BaseResp;
 import com.qf.pojo.vo.User;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 
 public interface UserService {
@@ -12,7 +14,7 @@ public interface UserService {
 
     BaseResp findAll();
 
-    BaseResp findById(Integer id);
+    BaseResp findById(HttpServletRequest request);
 
     BaseResp registry(UserRep userReq);
 
@@ -23,4 +25,7 @@ public interface UserService {
     BaseResp selectById( Integer id);
 
     User selectIdRandom();
+
+
+    BaseResp saveOrUpdate(User user);
 }

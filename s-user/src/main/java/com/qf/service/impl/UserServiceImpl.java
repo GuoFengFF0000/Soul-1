@@ -5,12 +5,15 @@ import com.qf.pojo.rep.UserRep;
 import com.qf.pojo.resp.BaseResp;
 import com.qf.pojo.vo.User;
 import com.qf.service.UserService;
+import com.qf.utils.CookieUtils;
 import com.qf.utils.JWTUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +24,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
+
 
 
     @Autowired
@@ -57,6 +61,7 @@ public class UserServiceImpl implements UserService {
             Map map = new HashMap();
             map.put("email", byEmail.getEmail());
             map.put("id", byEmail.getId());
+
             String token = jwtUtils.token(map);
             baseResp.setCode(200);
             baseResp.setMessage("登录成功");
@@ -83,17 +88,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BaseResp findById(Integer id) {
+    public BaseResp findById(HttpServletRequest request) {
+        //先解析登录后jwt产生的token 解密获得用户id
         BaseResp baseResp = new BaseResp();
-        Optional<User> byId = userRepository.findById(id);
+        Cookie[] cookies = request.getCookies();
+        CookieUtils cookieUtils = new CookieUtils();
+        String token = cookieUtils.getToken(cookies);
+        JWTUtils jwtUtils = new JWTUtils();
+        Map verify = jwtUtils.Verify(token);
+        Integer id1 = (Integer)verify.get("id");
+        Optional<User> byId = userRepository.findById(id1);
         if(byId.isPresent()){
             baseResp.setCode(200);
+            baseResp.setMessage("查询一个ok");
             baseResp.setData(byId.get());
-            baseResp.setMessage("查询一个成功");
-            return baseResp;
+
         }
-        baseResp.setCode(201);
-        baseResp.setMessage("查询一个失败");
         return baseResp;
     }
 
@@ -180,6 +190,15 @@ public class UserServiceImpl implements UserService {
     public User selectIdRandom() {
         User user = userMapper.selectIdRandom();
         return user;
+    }
+
+    @Override
+    public BaseResp saveOrUpdate(User user) {
+        BaseResp baseResp = new BaseResp();
+        User user1 = userRepository.saveAndFlush(user);
+        baseResp.setCode(200);
+        baseResp.setMessage("个人信息已完善");
+        return baseResp;
     }
 
 

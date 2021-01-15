@@ -19,10 +19,9 @@ public class User {
     private String pic2;
     private String pic3;
     private Integer age;
-    private String sex;
+    private Integer sex;
     private String word;
     private String constellation;
     private String message;
-
     private Integer status;
 }

@@ -35,18 +35,30 @@ public class JWTUtils {
         //签发人
 
 
-        String sign = JWT.create().withHeader(headMap).
-                withSubject("token").withIssuer(issu).withClaim("body", map).withIssuedAt(new Date()).withExpiresAt(date).sign(algorithmHS);
+        String sign = JWT.create().withHeader(headMap)
+                //主题
+                .withSubject("token")
+                //签发人
+                .withIssuer(issu)
+                //自定义载合体
+                .withClaim("body", map)
+                //生成时间
+                .withIssuedAt(new Date())
+                //token过期时间
+                .withExpiresAt(date)
+                //签名部分
+                .sign(algorithmHS);
         return sign;
     }
 
 
     public Map Verify(String token){
         Algorithm algorithm = Algorithm.HMAC256("qianfengjavaniubi");
-
+        //解密
         JWTVerifier verifier = JWT.require(algorithm).withIssuer(issu).build();
 
         try{
+            //解析token
             DecodedJWT verify = verifier.verify(token);
             Claim body = verify.getClaim("body");
             Map<String, Object> stringObjectMap = body.asMap();

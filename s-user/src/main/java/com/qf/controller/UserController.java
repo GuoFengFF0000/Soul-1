@@ -4,9 +4,12 @@ import com.qf.pojo.rep.UserRep;
 import com.qf.pojo.resp.BaseResp;
 import com.qf.pojo.vo.User;
 import com.qf.service.UserService;
+import com.qf.utils.UploadPic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +20,8 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+
 
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public BaseResp login(@RequestBody UserRep userRep){
@@ -42,8 +47,8 @@ public class UserController {
 
     //根据Id查询
     @RequestMapping(value = "/findById",method = RequestMethod.POST)
-    public BaseResp findById(@RequestBody Map map){
-        return userService.findById(Integer.valueOf(map.get("id").toString()));
+    public BaseResp findById(HttpServletRequest request){
+        return userService.findById(request);
     }
 
     //随机查所有
@@ -63,5 +68,18 @@ public class UserController {
     public User selectIdRandom(){
         return userService.selectIdRandom();
     }
+
+    //修改个人资料
+    @RequestMapping(value = "/saveOrUpdate",method = RequestMethod.POST)
+    public BaseResp saveOrUpdate(@RequestBody User user){
+        return userService.saveOrUpdate(user);
+    }
+    //上传
+    @RequestMapping(value = "/upload",method = RequestMethod.POST)
+    public BaseResp upload(@RequestParam("file")MultipartFile multipartFile){
+        UploadPic uploadPic = new UploadPic();
+        return uploadPic.upload(multipartFile);
+    }
+
 
 }
