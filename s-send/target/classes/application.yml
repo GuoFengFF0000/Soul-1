@@ -19,17 +19,17 @@ lance:
     sender: 1758020778@qq.com
   application:
     name: s-send
-  cloud:
-    config:
-      #http://localhost:7500/qf-shop/dev
-      #uri: http://localhost:7500
-      discovery:
-        #我们配置再eureka上 得唯一标识
-        service-id: s-config
-        enabled: true
-      name: soul
-      profile: dev
-      label: main
+#  cloud:
+#    config:
+#      #http://localhost:7500/qf-shop/dev
+#      #uri: http://localhost:7500
+#      discovery:
+#        #我们配置再eureka上 得唯一标识
+#        service-id: s-config
+#        enabled: true
+#      name: soul
+#      profile: dev
+#      label: main
 
 
 server:

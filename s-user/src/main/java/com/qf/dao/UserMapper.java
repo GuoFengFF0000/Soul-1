@@ -11,7 +11,7 @@ public interface UserMapper {
 
    List<User> selectById(@Param("id") Integer id);
 
-    User selectIdRandom();
+
 
 
 }

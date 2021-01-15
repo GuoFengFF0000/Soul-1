@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.dao.CircleFriendMapper">
+    <resultMap id="Base" type="com.qf.pojo.vo.Follow">
+        <id column="f_id" property="fid"></id>
+        <result column="uid" property="uid"></result>
+        <result column="followuser" property="followUser"></result>
+    </resultMap>
+
+    <insert id="addFollow" parameterType="com.qf.pojo.vo.Follow" >
+        INSERT INTO follow (uid,followuser) VALUES (#{uid},#{followUser})
+    </insert>
+
+    <select id="findFollowByUid" resultType="java.lang.Integer">
+        SELECT COUNT(followuser) FROM follow WHERE uid = #{uid}
+    </select>
+
+    <select id="findFollowByFollowUser" resultType="java.lang.Integer">
+        SELECT COUNT(uid) FROM follow WHERE followuser = #{followUser}
+    </select>
+
+    <select id="findFollowFriends" resultType="com.qf.pojo.vo.FollowFriends">
+        SELECT f.f_id,f.`uid` as fid,f.`followuser`,cf.`comment`,cf.`commentdate`,cf.`commentuser`,cf.`uid`,cf.cf_id as cfId,cf.zannums as zanNums,u.`pic1`,u.message FROM follow f,circlefriend cf ,USER u WHERE f.`uid`=#{id} AND cf.`commentuser`=f.`followuser` AND u.`message`=cf.`commentuser`
+    </select>
+
+</mapper>

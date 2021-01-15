@@ -24,4 +24,6 @@ public class User {
     private String constellation;
     private String message;
     private Integer status;
+    //余额
+    private Double balance;
 }

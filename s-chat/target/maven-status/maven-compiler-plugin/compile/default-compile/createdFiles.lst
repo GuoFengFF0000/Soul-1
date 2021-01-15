@@ -1,0 +1,5 @@
+com\qf\config\OneToMany.class
+com\qf\model\MyMessage.class
+com\qf\ChatApplication.class
+com\qf\config\WebSocketConfiguration.class
+com\qf\config\OneToOne.class

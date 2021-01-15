@@ -1,12 +1,18 @@
 package com.qf.service.impl;
+import com.alibaba.fastjson.JSONObject;
+import com.qf.client.GiftClient;
 import com.qf.dao.UserMapper;
 import com.qf.dao.UserRepository;
 import com.qf.pojo.rep.UserRep;
 import com.qf.pojo.resp.BaseResp;
+import com.qf.pojo.vo.Anchor;
+import com.qf.pojo.vo.Gift;
 import com.qf.pojo.vo.User;
 import com.qf.service.UserService;
 import com.qf.utils.CookieUtils;
 import com.qf.utils.JWTUtils;
+import com.qf.utils.RedisUtils;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +39,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserMapper userMapper;
 
+    @Autowired
+    GiftClient giftClient;
+
+    @Autowired
+    RedisUtils redisUtils;
+
     @Override
     public BaseResp login(UserRep userRep) {
-
         BaseResp baseResp = new BaseResp();
         String email1 = userRep.getEmail();
         User byEmail1 = userRepository.findByEmail(email1);
@@ -68,8 +79,6 @@ public class UserServiceImpl implements UserService {
             baseResp.setData(token);
             return baseResp;
         }
-
-
 
     }
 
@@ -167,6 +176,9 @@ public class UserServiceImpl implements UserService {
     public List<User> selectAll() {
         BaseResp baseResp = new BaseResp();
         List<User> users = userMapper.selectAll();
+        baseResp.setCode(200);
+        baseResp.setMessage("随机查询所有成功");
+        baseResp.setData(users);
 
         return users;
     }
@@ -186,10 +198,64 @@ public class UserServiceImpl implements UserService {
         return baseResp;
     }
 
+
     @Override
-    public User selectIdRandom() {
-        User user = userMapper.selectIdRandom();
-        return user;
+    public BaseResp gift(Map map) {
+        BaseResp baseResp = new BaseResp();
+
+        int uid = Integer.valueOf(String.valueOf(map.get("uid")));
+        int aid = Integer.valueOf(String.valueOf(map.get("aid")));;
+        int gid = Integer.valueOf(String.valueOf(map.get("gid")));;
+        int num = Integer.valueOf(String.valueOf(map.get("num")));;
+
+        Optional<User> userById = userRepository.findById(uid);
+
+        Gift gift=null;
+        BaseResp giftById = giftClient.findById(gid);
+        if (giftById.getCode()==200){
+            Object data = giftById.getData();
+            Object o = JSONObject.toJSON(data);
+            gift = JSONObject.parseObject(o.toString(), Gift.class);
+        }
+
+        double total = gift.getPrice() * num;
+
+        if (userById.isPresent() && gift!=null){
+            User user = userById.get();
+            if (user.getBalance()==null||user.getBalance() < total){
+                baseResp.setCode(300);
+                baseResp.setMessage("余额不足!");
+                return baseResp;
+            }else {
+                user.setBalance(user.getBalance() - total);
+                User user1 = userRepository.saveAndFlush(user);
+
+                Anchor anchor = new Anchor();
+                anchor.setId(aid);
+                anchor.setBalance(total);
+                rabbitTemplate.convertAndSend("gift",anchor);
+
+                Double aDouble = redisUtils.ZScore(String.valueOf(aid), user1.getUserName());
+                if (aDouble==null){
+                    redisUtils.ZSet(String.valueOf(aid),user1.getUserName(),total);
+                    System.out.println(redisUtils.ZScore(String.valueOf(aid), user1.getUserName()));
+                    System.out.println(redisUtils.ZRevRangeWithScores(String.valueOf(aid),0,-1).toArray().toString());
+                }else {
+                    redisUtils.ZIncrScore(String.valueOf(aid),user1.getUserName(),total);
+                    System.out.println(redisUtils.ZScore(String.valueOf(aid), user1.getUserName()));
+                    System.out.println(redisUtils.ZRevRangeWithScores(String.valueOf(aid),0,-1).toArray().toString());
+                }
+
+                baseResp.setCode(200);
+                baseResp.setMessage(user1.getUserName()+"送了"+num+"个"+gift.getName());
+                baseResp.setData(user1);
+                return baseResp;
+            }
+        }else {
+            baseResp.setCode(300);
+            baseResp.setMessage("用户不存在");
+            return baseResp;
+        }
     }
 
     @Override

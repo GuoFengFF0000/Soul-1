@@ -1,0 +1,16 @@
+server:
+  port: 8011
+spring:
+  application:
+    name: s-circle of friend
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/soul?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: root
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8000/eureka
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml

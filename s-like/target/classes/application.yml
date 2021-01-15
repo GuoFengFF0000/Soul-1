@@ -2,7 +2,7 @@ server:
   port: 8030
 spring:
   application:
-    name: s-like
+    name: s-love
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/soul?useUnicode=true&characterEncoding=UTF-8&useSSL=false

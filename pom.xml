@@ -18,11 +18,16 @@
         <module>s-pay</module>
         <module>s-pojo</module>
         <module>s-config</module>
+        <module>s-circle of friends</module>
         <module>s-send</module>
-        <module>s-talk</module>
+        <module>s-tv</module>
+        <module>s-chat</module>
+        <module>s-gift</module>
+        <module>s-webSocket</module>
         <module>s-like</module>
+        <module>s-anchors</module>
+        <module>s-talker</module>
     </modules>
-
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -33,20 +38,28 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>5.1.47</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>2.0.1</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>Finchley.RELEASE</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>1.16.22</version>
                 <scope>provided</scope>
             </dependency>
-
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
@@ -66,5 +79,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
 
 </project>

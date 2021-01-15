@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 
+
 public interface UserService {
     BaseResp login(UserRep userRep);
 
@@ -24,8 +25,9 @@ public interface UserService {
 
     BaseResp selectById( Integer id);
 
-    User selectIdRandom();
+
 
 
     BaseResp saveOrUpdate(User user);
+    BaseResp gift(Map map);
 }

@@ -21,8 +21,6 @@ public class UserController {
     @Autowired
     UserService userService;
 
-
-
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public BaseResp login(@RequestBody UserRep userRep){
         return userService.login(userRep);
@@ -63,10 +61,10 @@ public class UserController {
         return userService.selectById(Integer.valueOf(map.get("id").toString()));
     }
 
-    //查询一个  随机id
-    @RequestMapping("/selectIdRandom")
-    public User selectIdRandom(){
-        return userService.selectIdRandom();
+    //礼物打赏
+    @RequestMapping(value = "/gift",method = RequestMethod.POST)
+    public BaseResp gift(@RequestBody Map map){
+        return userService.gift(map);
     }
 
     //修改个人资料
@@ -76,7 +74,7 @@ public class UserController {
     }
     //上传
     @RequestMapping(value = "/upload",method = RequestMethod.POST)
-    public BaseResp upload(@RequestParam("file")MultipartFile multipartFile){
+    public BaseResp upload(@RequestParam("file") MultipartFile multipartFile){
         UploadPic uploadPic = new UploadPic();
         return uploadPic.upload(multipartFile);
     }
