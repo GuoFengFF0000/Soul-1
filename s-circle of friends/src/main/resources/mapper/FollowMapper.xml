@@ -7,10 +7,11 @@
         <id column="f_id" property="fid"></id>
         <result column="uid" property="uid"></result>
         <result column="followuser" property="followUser"></result>
+        <result column="cid" property="cid"></result>
     </resultMap>
 
     <insert id="addFollow" parameterType="com.qf.pojo.vo.Follow" >
-        INSERT INTO follow (uid,followuser) VALUES (#{uid},#{followUser})
+        INSERT INTO follow (uid,followuser,cid) VALUES (#{uid},#{followUser},#{cid})
     </insert>
 
     <select id="findFollowByUid" resultType="java.lang.Integer">
@@ -23,6 +24,10 @@
 
     <select id="findFollowFriends" resultType="com.qf.pojo.vo.FollowFriends">
         SELECT f.f_id,f.`uid` as fid,f.`followuser`,cf.`comment`,cf.`commentdate`,cf.`commentuser`,cf.`uid`,cf.cf_id as cfId,cf.zannums as zanNums,u.`pic1`,u.message FROM follow f,circlefriend cf ,USER u WHERE f.`uid`=#{id} AND cf.`commentuser`=f.`followuser` AND u.`message`=cf.`commentuser`
+    </select>
+
+    <select id="findFollowUserByUid" resultMap="Base">
+        SELECT f.`followuser` FROM follow f WHERE uid = #{uid}
     </select>
 
 </mapper>

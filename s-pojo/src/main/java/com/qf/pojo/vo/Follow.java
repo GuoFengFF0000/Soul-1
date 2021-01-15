@@ -11,5 +11,7 @@ public class Follow {
 
     private String followUser;
 
+    private Integer cid;
+
 
 }

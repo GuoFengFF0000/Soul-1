@@ -9,6 +9,7 @@ import com.qf.pojo.vo.Remark;
 import com.qf.service.CircleFriendService;
 import com.qf.utils.CookieUtils;
 import com.qf.utils.JWTUtils;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,8 @@ public class CircleFriendServiceImpl implements CircleFriendService {
     @Autowired
     JWTUtils jwtUtils;
 
+
+
     @Override
     public BaseResp insertComment(CircleFriends circleFriends) {
         BaseResp baseResp = new BaseResp();
@@ -41,6 +44,7 @@ public class CircleFriendServiceImpl implements CircleFriendService {
             baseResp.setMessage("内容不能为空!");
             return baseResp;
         }
+        circleFriendMapper.setCharsetToUtf8mb4();
         int friend = circleFriendMapper.insertComment(circleFriends);
         baseResp.setCode(200);
         baseResp.setData(friend);
@@ -190,6 +194,20 @@ public class CircleFriendServiceImpl implements CircleFriendService {
     @Override
     public BaseResp addFollow(Follow follow) {
         BaseResp baseResp = new BaseResp();
+
+        List followUserByUid = circleFriendMapper.findFollowUserByUid(follow.getUid());
+        if (followUserByUid.toString().contains(follow.getFollowUser())){
+            baseResp.setCode(201);
+            baseResp.setMessage("已关注该用户");
+            return baseResp;
+        }
+        System.out.println(follow.getCid());
+        CircleFriends circleFriends = circleFriendMapper.findByCfId(follow.getCid());
+        if (circleFriends.toString().contains(follow.getUid().toString())){
+            baseResp.setCode(202);
+            baseResp.setMessage("不能关注自己");
+            return baseResp;
+        }
         int i = circleFriendMapper.addFollow(follow);
         baseResp.setCode(200);
         baseResp.setData(i);
