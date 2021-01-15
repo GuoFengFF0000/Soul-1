@@ -167,12 +167,12 @@ public class LoveServiceImpl implements LoveService {
     }
 
     @Override
-    public List<User> findFriend(HttpServletRequest req, Map map) {
-        Cookie[] cookies = req.getCookies();
+    public List<User> findFriend(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
         String token = cookieUtils.getToken(cookies);
         JWTUtils jwtUtils = new JWTUtils();
-        Map verify = jwtUtils.Verify(token);
-        Integer id = (Integer) verify.get("id");
+        Map map = jwtUtils.Verify(token);
+        Integer id = (Integer) map.get("id");
 
         List<User> friendList = new ArrayList<>();
 
@@ -189,7 +189,7 @@ public class LoveServiceImpl implements LoveService {
 
         for (Love love : yse) {
             Map maps = new HashMap();
-            maps.put("id",love.getUserId());
+            maps.put("id",love.getLikeId());
             BaseResp byId = userClient.findById(maps);
             Object data1 = byId.getData();
             User user = JSONObject.parseObject(JSONObject.toJSON(data1).toString(), User.class);

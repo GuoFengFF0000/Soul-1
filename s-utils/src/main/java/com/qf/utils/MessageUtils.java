@@ -6,12 +6,12 @@ import com.qf.pojo.resp.ResultMessage;
 
 public class MessageUtils {
 
-    public static String getMessage(boolean isSystemMessage,String fromEmail,Object message){
+    public static String getMessage(boolean isSystemMessage,String fromId,Object message){
         ResultMessage resultMessage = new ResultMessage();
         resultMessage.setSystem(isSystemMessage);
         resultMessage.setMessage(message);
-        if (fromEmail != null){
-            resultMessage.setFromEmail(fromEmail);
+        if (fromId != null){
+            resultMessage.setFromEmail(fromId);
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
