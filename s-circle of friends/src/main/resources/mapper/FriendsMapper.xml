@@ -20,7 +20,9 @@
         insert into circlefriend (uid,comment,commentdate,commentuser) values (#{uid},#{comment},#{commentDate},#{commentUser})
    </insert>
 
-
+    <select id="findByCfId" resultType="com.qf.pojo.vo.CircleFriends">
+        SELECT cf.uid FROM circlefriend cf WHERE cf_id = #{cfId}
+    </select>
     <select id="circleFriendFindAllByNew" resultMap="BaseResult">
         SELECT cf.cf_id,u.id,cf.uid,u.message,u.pic1,cf.comment,cf.zannums,cf.commentdate FROM circlefriend cf,USER u  WHERE u.id=cf.uid  ORDER BY commentdate DESC
     </select>
